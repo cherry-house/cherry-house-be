@@ -29,7 +29,7 @@ public class PostResponse {
             private final String content;
             private final List<String> photos;
 
-            public PostDto(Post post) {
+            public PostDto(Post post) { //TODO: 위치, 태그, 사진 로직 추가
                 this.id = post.getId();
                 this.title = post.getTitle();
                 this.location = null;
@@ -54,7 +54,7 @@ public class PostResponse {
         private final String content;
         private final List<String> photos;
 
-        public PostDto(Post post) {
+        public PostDto(Post post) { //TODO: 위치, 태그, 사진 로직 추가
             this.id = post.getId();
             this.title = post.getTitle();
             this.author = new AuthorDto();
@@ -71,7 +71,7 @@ public class PostResponse {
             private final String name;
             private final String image;
 
-            public AuthorDto() {
+            public AuthorDto() { //TODO: 이름, 이미지 로직 추가
                 this.name = null;
                 this.image = null;
             }

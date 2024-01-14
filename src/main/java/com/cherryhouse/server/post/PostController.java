@@ -2,6 +2,7 @@ package com.cherryhouse.server.post;
 
 import com.cherryhouse.server._core.util.ApiResponse;
 import com.cherryhouse.server._core.util.Cursor;
+import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +29,20 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(){
+    public ResponseEntity<?> create(@RequestBody PostRequest.CreateDto request){
+        postService.create(request);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
-    @PutMapping
-    public ResponseEntity<?> update(){
+    @PutMapping("/{postId}")
+    public ResponseEntity<?> update(@PathVariable Long postId){
+        postService.update(postId);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> delete(){
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<?> delete(@PathVariable Long postId){
+        postService.delete(postId);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 }

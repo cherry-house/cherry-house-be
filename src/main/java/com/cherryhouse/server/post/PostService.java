@@ -3,6 +3,7 @@ package com.cherryhouse.server.post;
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.util.Cursor;
+import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -17,6 +18,27 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+
+    @Transactional
+    public void create(PostRequest.CreateDto createDto){
+        //TODO: 위치, 태그, 사진 로직 추가
+        Post post = Post.builder()
+                .title(createDto.getTitle())
+                .category(createDto.getCategory())
+                .content(createDto.getContent())
+                .build();
+        postRepository.save(post);
+    }
+
+    @Transactional
+    public void update(Long postId){
+
+    }
+
+    @Transactional
+    public void delete(Long postId){
+
+    }
 
     public PostResponse.PostDto getPost(Long postId){
         Post post = postRepository.findById(postId).orElseThrow(() -> new ApiException(ExceptionCode.POST_NOT_FOUND));
