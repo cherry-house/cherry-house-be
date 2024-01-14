@@ -24,6 +24,7 @@ public class PostResponse {
             private final String title;
             private final String location;
             private final String address;
+            private final Integer distance;
             private final List<String> tags;
             private final String content;
             private final List<String> photos;
@@ -33,6 +34,7 @@ public class PostResponse {
                 this.title = post.getTitle();
                 this.location = null;
                 this.address = null;
+                this.distance = null;
                 this.tags = null;
                 this.content = post.getContent();
                 this.photos = null;
@@ -40,7 +42,39 @@ public class PostResponse {
         }
     }
 
-    public class PostDto{
+    @Getter
+    public static class PostDto{
+        private final Long id;
+        private final String title;
+        private final AuthorDto author;
+        private final String location;
+        private final String address;
+        private final Integer distance;
+        private final List<String> tags;
+        private final String content;
+        private final List<String> photos;
 
+        public PostDto(Post post) {
+            this.id = post.getId();
+            this.title = post.getTitle();
+            this.author = new AuthorDto();
+            this.location = null;
+            this.address = null;
+            this.distance = null;
+            this.tags = null;
+            this.content = post.getContent();
+            this.photos = null;
+        }
+
+        @Getter
+        public class AuthorDto{
+            private final String name;
+            private final String image;
+
+            public AuthorDto() {
+                this.name = null;
+                this.image = null;
+            }
+        }
     }
 }

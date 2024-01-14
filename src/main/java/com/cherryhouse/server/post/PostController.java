@@ -22,8 +22,9 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<?> getPost(){
-        return ResponseEntity.ok().body(ApiResponse.success());
+    public ResponseEntity<?> getPost(@PathVariable Long postId){
+        PostResponse.PostDto response = postService.getPost(postId);
+        return ResponseEntity.ok().body(ApiResponse.success(response));
     }
 
     @PostMapping

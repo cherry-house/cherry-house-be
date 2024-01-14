@@ -1,5 +1,7 @@
 package com.cherryhouse.server.post;
 
+import com.cherryhouse.server._core.exception.ApiException;
+import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.util.Cursor;
 import com.cherryhouse.server.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,11 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+
+    public PostResponse.PostDto getPost(Long postId){
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ApiException(ExceptionCode.POST_NOT_FOUND));
+        return new PostResponse.PostDto(post);
+    }
 
     public PostResponse.PostsDto getPosts(Cursor cursor){
         List<Post> postList = getPostList(cursor);
