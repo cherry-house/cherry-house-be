@@ -1,6 +1,8 @@
 package com.cherryhouse.server.post;
 
 import com.cherryhouse.server._core.util.ApiResponse;
+import com.cherryhouse.server._core.util.Cursor;
+import com.cherryhouse.server.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,8 +16,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public ResponseEntity<?> getPosts(){
-        return ResponseEntity.ok().body(ApiResponse.success());
+    public ResponseEntity<?> getPosts(Cursor cursor){
+        PostResponse.PostsDto response = postService.getPosts(cursor);
+        return ResponseEntity.ok().body(ApiResponse.success(response));
     }
 
     @GetMapping("/{postId}")
