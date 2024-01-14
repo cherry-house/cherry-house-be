@@ -35,8 +35,9 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<?> update(@PathVariable Long postId){
-        postService.update(postId);
+    public ResponseEntity<?> update(@PathVariable Long postId,
+                                    @RequestBody PostRequest.UpdateDto request){
+        postService.update(postId, request);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 

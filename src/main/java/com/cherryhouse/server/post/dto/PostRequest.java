@@ -16,4 +16,14 @@ public class PostRequest {
         private String content;
         private List<String> photos;
     }
+
+    @Getter
+    public static class UpdateDto{
+        private String title;
+        private String location;
+        private String category;
+        private List<String> tags;
+        private String content;
+        private List<String> photos;
+    }
 }

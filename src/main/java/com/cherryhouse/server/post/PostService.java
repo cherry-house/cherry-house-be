@@ -31,17 +31,20 @@ public class PostService {
     }
 
     @Transactional
-    public void update(Long postId){
-
+    public void update(Long postId, PostRequest.UpdateDto updateDto){
+        Post post = getPostById(postId);
+        post.update(updateDto.getTitle(), updateDto.getContent(), updateDto.getCategory());
+        //TODO: 위치, 태그, 사진 추가
     }
 
     @Transactional
     public void delete(Long postId){
-
+        getPostById(postId);
+        postRepository.deleteById(postId);
     }
 
     public PostResponse.PostDto getPost(Long postId){
-        Post post = postRepository.findById(postId).orElseThrow(() -> new ApiException(ExceptionCode.POST_NOT_FOUND));
+        Post post = getPostById(postId);
         return new PostResponse.PostDto(post);
     }
 
@@ -52,12 +55,16 @@ public class PostService {
     }
 
     private List<Post> getPostList(Cursor cursor){
-        Pageable pageable = PageRequest.of(0, cursor.getSize());
-        if(cursor.hasKey()) return postRepository.findAllByIdLessThanOrderOrderByCreatedDate(cursor.getKey(), pageable);
-        else return postRepository.findAllOrderByCreatedDate(pageable);
+        Pageable pageable = PageRequest.ofSize(cursor.getSize());
+        return cursor.hasKey() ? postRepository.findAllByIdLessThanOrderOrderByCreatedDate(cursor.getKey(), pageable)
+                : postRepository.findAllOrderByCreatedDate(pageable);
     }
 
     private Long getLastKey(List<Post> postList){
         return postList.isEmpty() ? -1L : postList.get(postList.size() - 1).getId();
+    }
+
+    private Post getPostById(Long postId) {
+        return postRepository.findById(postId).orElseThrow(() -> new ApiException(ExceptionCode.POST_NOT_FOUND));
     }
 }

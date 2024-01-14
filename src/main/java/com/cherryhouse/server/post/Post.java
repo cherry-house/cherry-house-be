@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
+import static java.time.LocalTime.now;
 
 @Entity
 @Getter
@@ -28,11 +33,8 @@ public class Post {
 
     private String storeLocationY;
 
-    @ColumnDefault(value = "now()")
-    @Temporal(TemporalType.TIMESTAMP)
     private String createdDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private String updatedDate;
 
     @Builder
@@ -43,7 +45,14 @@ public class Post {
         this.category = category;
         this.storeLocationX = storeLocationX;
         this.storeLocationY = storeLocationY;
-        this.createdDate = createdDate;
+        this.createdDate = String.valueOf(LocalDateTime.now());
         this.updatedDate = updatedDate;
+    }
+
+    public void update(String title, String content, String category){
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.updatedDate = String.valueOf(LocalDateTime.now());
     }
 }
