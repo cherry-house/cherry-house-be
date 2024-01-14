@@ -2,8 +2,10 @@ package com.cherryhouse.server._core.util;
 
 import com.cherryhouse.server._core.exception.ExceptionCode;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public class ApiResponse {
 
     public static <T>ResponseDto<T> success(){
@@ -22,6 +24,7 @@ public class ApiResponse {
         return new ResponseDto<>(status.value(), null, message);
     }
 
+    @Getter
     @AllArgsConstructor
     public static class ResponseDto<T>{
         private int status;
