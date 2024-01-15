@@ -4,12 +4,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-
-import static java.time.LocalTime.now;
 
 @Entity
 @Getter
@@ -17,7 +13,8 @@ import static java.time.LocalTime.now;
 @Table(name = "post_tb")
 public class Post {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -26,8 +23,9 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String category;
+    private Category category;
 
     private String storeLocationX;
 
@@ -38,18 +36,16 @@ public class Post {
     private String updatedDate;
 
     @Builder
-    public Post(String title, String content, String category, String storeLocationX,
-                String storeLocationY, String createdDate, String updatedDate) {
+    public Post(String title, String content, Category category, String storeLocationX, String storeLocationY) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.storeLocationX = storeLocationX;
         this.storeLocationY = storeLocationY;
         this.createdDate = String.valueOf(LocalDateTime.now());
-        this.updatedDate = updatedDate;
     }
 
-    public void update(String title, String content, String category){
+    public void update(String title, String content, Category category){
         this.title = title;
         this.content = content;
         this.category = category;
