@@ -16,8 +16,8 @@ public class ApiResponse {
         return new ResponseDto<>(200, response, null);
     }
 
-    public static <T>ResponseDto<T> error(ExceptionCode error){
-        return new ResponseDto<>(error.getStatus().value(), null, error.getMessage());
+    public static <T>ResponseDto<T> error(ExceptionCode error, String message){
+        return new ResponseDto<>(error.getStatus().value(), null, message);
     }
 
     public static <T>ResponseDto<T> error(HttpStatus status, String message){
