@@ -1,6 +1,7 @@
 package com.cherryhouse.server.post.dto;
 
 import com.cherryhouse.server._core.util.Cursor;
+import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.Post;
 
 import java.util.List;
@@ -8,12 +9,12 @@ import java.util.List;
 public class PostResponse {
 
     public record PostsDto(
-            Cursor cursor,
+            PageData pageData,
             List<PostDto> postList
     ) {
-        public static PostsDto of(Cursor cursor, List<Post> postList){
+        public static PostsDto of(PageData pageData, List<Post> postList){
             return new PostsDto(
-                    cursor,
+                    pageData,
                     postList.stream().map(PostDto::new).toList()
             );
         }

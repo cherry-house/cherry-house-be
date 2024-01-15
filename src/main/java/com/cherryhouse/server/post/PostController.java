@@ -6,6 +6,8 @@ import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -19,8 +21,8 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public ResponseEntity<?> getPosts(Cursor cursor){
-        PostResponse.PostsDto response = postService.getPosts(cursor);
+    public ResponseEntity<?> getPosts(@PageableDefault(size = 6) Pageable pageable){
+        PostResponse.PostsDto response = postService.getPosts(pageable);
         return ResponseEntity.ok().body(ApiResponse.success(response));
     }
 

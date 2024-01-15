@@ -2,17 +2,16 @@ package com.cherryhouse.server.post;
 
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
-import com.cherryhouse.server._core.util.Cursor;
+import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,20 +57,10 @@ public class PostService {
         return new PostResponse.PostDto(post);
     }
 
-    public PostResponse.PostsDto getPosts(Cursor cursor){
-        List<Post> postList = getPostList(cursor);
-        Long lastKey = getLastKey(postList);
-        return PostResponse.PostsDto.of(new Cursor(lastKey, postList.size()), postList);
-    }
-
-    private List<Post> getPostList(Cursor cursor){
-        Pageable pageable = PageRequest.ofSize(cursor.getSize());
-        return cursor.hasKey() ? postRepository.findAllByIdLessThanOrderOrderByCreatedDate(cursor.getKey(), pageable)
-                : postRepository.findAllOrderByCreatedDate(pageable);
-    }
-
-    private Long getLastKey(List<Post> postList){
-        return postList.isEmpty() ? -1L : postList.get(postList.size() - 1).getId();
+    public PostResponse.PostsDto getPosts(Pageable pageable){
+        Page<Post> postList = postRepository.findAllOrderByCreatedDate(pageable);
+        PageData pageData = getPageData(postList);
+        return PostResponse.PostsDto.of(pageData, postList.getContent());
     }
 
     private Post getPostById(Long postId) {
@@ -81,5 +70,16 @@ public class PostService {
     private boolean isNotValid(Category category) {
         return Arrays.stream(Category.values())
                 .noneMatch(enumValue -> enumValue.name().equals(category.name().toUpperCase()));
+    }
+
+    private PageData getPageData(Page<Post> postList) {
+        return new PageData(
+                postList.getTotalElements(),
+                postList.getTotalPages(),
+                postList.isLast(),
+                postList.isFirst(),
+                postList.getNumber(),
+                postList.getSize()
+        );
     }
 }
