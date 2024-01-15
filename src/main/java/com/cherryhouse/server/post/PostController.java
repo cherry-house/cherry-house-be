@@ -4,9 +4,11 @@ import com.cherryhouse.server._core.util.ApiResponse;
 import com.cherryhouse.server._core.util.Cursor;
 import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -29,14 +31,14 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody PostRequest.CreateDto request){
+    public ResponseEntity<?> create(@RequestBody @Valid PostRequest.CreateDto request, Errors errors){
         postService.create(request);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @PutMapping("/{postId}")
     public ResponseEntity<?> update(@PathVariable Long postId,
-                                    @RequestBody PostRequest.UpdateDto request){
+                                    @RequestBody @Valid PostRequest.UpdateDto request, Errors errors){
         postService.update(postId, request);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
