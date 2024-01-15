@@ -6,10 +6,12 @@ import com.cherryhouse.server._core.util.Cursor;
 import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -21,6 +23,10 @@ public class PostService {
 
     @Transactional
     public void create(PostRequest.CreateDto createDto){
+        if(isNotValid(createDto.category())) {
+            throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
+        }
+
         //TODO: 위치, 태그, 사진 로직 추가
         Post post = Post.builder()
                 .title(createDto.title())
@@ -32,6 +38,10 @@ public class PostService {
 
     @Transactional
     public void update(Long postId, PostRequest.UpdateDto updateDto){
+        if(isNotValid(updateDto.category())) {
+            throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
+        }
+
         Post post = getPostById(postId);
         post.update(updateDto.title(), updateDto.content(), updateDto.category());
         //TODO: 위치, 태그, 사진 추가
@@ -66,5 +76,10 @@ public class PostService {
 
     private Post getPostById(Long postId) {
         return postRepository.findById(postId).orElseThrow(() -> new ApiException(ExceptionCode.POST_NOT_FOUND));
+    }
+
+    private boolean isNotValid(Category category) {
+        return Arrays.stream(Category.values())
+                .noneMatch(enumValue -> enumValue.name().equals(category.name().toUpperCase()));
     }
 }
