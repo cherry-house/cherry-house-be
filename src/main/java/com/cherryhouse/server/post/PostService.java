@@ -23,9 +23,9 @@ public class PostService {
     public void create(PostRequest.CreateDto createDto){
         //TODO: 위치, 태그, 사진 로직 추가
         Post post = Post.builder()
-                .title(createDto.getTitle())
-                .category(createDto.getCategory())
-                .content(createDto.getContent())
+                .title(createDto.title())
+                .category(createDto.category())
+                .content(createDto.content())
                 .build();
         postRepository.save(post);
     }
@@ -33,7 +33,7 @@ public class PostService {
     @Transactional
     public void update(Long postId, PostRequest.UpdateDto updateDto){
         Post post = getPostById(postId);
-        post.update(updateDto.getTitle(), updateDto.getContent(), updateDto.getCategory());
+        post.update(updateDto.title(), updateDto.content(), updateDto.category());
         //TODO: 위치, 태그, 사진 추가
     }
 
@@ -51,7 +51,7 @@ public class PostService {
     public PostResponse.PostsDto getPosts(Cursor cursor){
         List<Post> postList = getPostList(cursor);
         Long lastKey = getLastKey(postList);
-        return new PostResponse.PostsDto(new Cursor(lastKey, postList.size()), postList);
+        return PostResponse.PostsDto.of(new Cursor(lastKey, postList.size()), postList);
     }
 
     private List<Post> getPostList(Cursor cursor){

@@ -2,79 +2,75 @@ package com.cherryhouse.server.post.dto;
 
 import com.cherryhouse.server._core.util.Cursor;
 import com.cherryhouse.server.post.Post;
-import lombok.Getter;
 
 import java.util.List;
 
 public class PostResponse {
 
-    @Getter
-    public static class PostsDto{
-        private final Cursor cursor;
-        private final List<Post> postList;
-
-        public PostsDto(Cursor cursor, List<Post> postList) {
-            this.cursor = cursor;
-            this.postList = postList;
+    public record PostsDto(
+            Cursor cursor,
+            List<PostDto> postList
+    ) {
+        public static PostsDto of(Cursor cursor, List<Post> postList){
+            return new PostsDto(
+                    cursor,
+                    postList.stream().map(PostDto::new).toList()
+            );
         }
 
-        @Getter
-        public class PostDto{
-            private final Long id;
-            private final String title;
-            private final String location;
-            private final String address;
-            private final Integer distance;
-            private final List<String> tags;
-            private final String content;
-            private final List<String> photos;
-
+        public record PostDto (
+                Long id,
+                String title,
+                String location,
+                String address,
+                Integer distance,
+                List<String> tags,
+                String content,
+                List<String> photos
+        ){
             public PostDto(Post post) { //TODO: 위치, 태그, 사진 로직 추가
-                this.id = post.getId();
-                this.title = post.getTitle();
-                this.location = null;
-                this.address = null;
-                this.distance = null;
-                this.tags = null;
-                this.content = post.getContent();
-                this.photos = null;
+                this(
+                        post.getId(),
+                        post.getTitle(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        post.getContent(),
+                        null
+                );
             }
         }
     }
 
-    @Getter
-    public static class PostDto{
-        private final Long id;
-        private final String title;
-        private final AuthorDto author;
-        private final String location;
-        private final String address;
-        private final Integer distance;
-        private final List<String> tags;
-        private final String content;
-        private final List<String> photos;
-
+    public record PostDto (
+            Long id,
+            String title,
+            AuthorDto author,
+            String location,
+            String address,
+            Integer distance,
+            List<String> tags,
+            String content,
+            List<String> photos
+    ){
         public PostDto(Post post) { //TODO: 위치, 태그, 사진 로직 추가
-            this.id = post.getId();
-            this.title = post.getTitle();
-            this.author = new AuthorDto();
-            this.location = null;
-            this.address = null;
-            this.distance = null;
-            this.tags = null;
-            this.content = post.getContent();
-            this.photos = null;
+            this(
+                    post.getId(),
+                    post.getTitle(),
+                    null, //TODO: User 추가
+                    null,
+                    null,
+                    null,
+                    null,
+                    post.getContent(),
+                    null
+            );
         }
 
-        @Getter
-        public class AuthorDto{
-            private final String name;
-            private final String image;
-
-            public AuthorDto() { //TODO: 이름, 이미지 로직 추가
-                this.name = null;
-                this.image = null;
-            }
-        }
+        public record AuthorDto(
+                String name,
+                String image
+        ){} //TODO: user 엔티티 생성되면 추가하기
     }
 }
