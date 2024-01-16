@@ -5,6 +5,7 @@ import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
+import com.cherryhouse.server.tag.TagService;
 import com.cherryhouse.server.user.User;
 import com.cherryhouse.server.user.UserRepository;
 import com.cherryhouse.server.user.UserService;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final TagService tagService;
     private final UserService userService;
 
     @Transactional
@@ -30,6 +32,12 @@ public class PostService {
             throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
         }
 
+        //TODO: 위치, 사진 로직 추가
+        Post post = save(createDto);
+        tagService.create(post, createDto.tags());
+    }
+
+    private Post save(PostRequest.CreateDto createDto) {
         User user = userService.findByEmail(email);
 
         //TODO: 위치, 태그, 사진 로직 추가
@@ -40,6 +48,7 @@ public class PostService {
                 .content(createDto.content())
                 .build();
         postRepository.save(post);
+        return post;
     }
 
     @Transactional
