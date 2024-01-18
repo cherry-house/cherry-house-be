@@ -20,6 +20,16 @@ spring:
       default_batch_fetch_size: 100
     open-in-view: false
     defer-datasource-initialization: true
+  data:
+    redis:
+      jedis:
+        pool:
+          min-idle: 0
+          max-idle: 8
+          max-active: 8
+      port: 6379
+      host: 127.0.01
+
 
 jwt:
-  secret: Y2hlcnJ5aG91c2V3ZWJkZXZlbG9wbWVudDIwMjR3aW50ZXJwcm9qZWN0
+  secret: Y2hlcnJ5aG91c2V3ZWJkZXZlbG9wbWVudDIwMjR3aW50ZXJwcm9qZWN0Y2hlcnJ5aG91c2V3ZWJkZXZlbG9wbWVudDIwMjR3aW50ZXJwcm9qZWN0
