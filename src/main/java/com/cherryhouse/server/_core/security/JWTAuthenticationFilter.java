@@ -28,7 +28,7 @@ public class JWTAuthenticationFilter extends GenericFilter {
         String token = resolveToken((HttpServletRequest)request);
 
         if( token != null && tokenProvider.validateToken(token)){
-            Authentication authentication = tokenProvider.getAuthentication(token);
+            Authentication authentication = tokenProvider.getAuthentication(token, (HttpServletRequest) request);
             log.debug("Authentication 정보 : {}", authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else{
