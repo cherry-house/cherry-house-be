@@ -16,7 +16,7 @@ public enum ExceptionCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부에서 오류가 발생했습니다."),
 
 
-
+    USER_EXISTS(HttpStatus.BAD_REQUEST, "이미 회원가입된 이메일입니다."),
     INVALID_TOKEN_EXCEPTION(HttpStatus.NOT_FOUND,"유효하지 않은 토큰입니다.");
 
 
