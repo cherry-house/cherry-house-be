@@ -6,6 +6,7 @@ import com.cherryhouse.server._core.security.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +42,7 @@ public class TokenProvider {
 
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey) {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = secretKey.getBytes();
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -54,12 +55,15 @@ public class TokenProvider {
         long now = (new Date()).getTime();
         Date accessTokenExpire = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
 
+        UserPrincipal userPrincipal = (UserPrincipal)auth.getPrincipal();
+
         Claims claims = Jwts.claims();
         claims.put(AUTHORITIES_KEY,authorities);
+        claims.put(USER_EMAIL,userPrincipal.getEmail());
 
         String accessToken = Jwts.builder()
-                .setSubject(auth.getName())
-                .claim(AUTHORITIES_KEY, authorities) // 정보 저장
+                .setSubject(userPrincipal.getEmail())
+                .setClaims(claims) // 정보 저장
                 .signWith(key, SignatureAlgorithm.HS512) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret값 세팅
                 .setExpiration(accessTokenExpire) // set Expire Time 해당 옵션 안넣으면 expire안함
                 .compact();
@@ -81,17 +85,12 @@ public class TokenProvider {
 
 
     //JWT 토큰을 복호화 하여 토큰에 들어있는 정보를 꺼냄
-    public Authentication getAuthentication(String token) {
+    public Authentication getAuthentication(String token, HttpServletRequest request) {
 
         //토큰 복호화
-        Claims claims = Jwts
-                .parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims = parseClaims(token);
 
-        if (claims.get("auth") == null) {
+        if (claims.get(AUTHORITIES_KEY) == null)  {
             throw new ApiException(ExceptionCode.INVALID_TOKEN_EXCEPTION, "유효하지 않은 토큰입니다.");
         }
 
@@ -102,12 +101,16 @@ public class TokenProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        UserDetails principal = new UserPrincipal(claims.get(USER_EMAIL).toString(),"",authorities);
+        UserDetails principal = new UserPrincipal(
+                claims.get(USER_EMAIL).toString(),
+                "",
+                authorities);
 
 
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        return authentication;
     }
 
 
