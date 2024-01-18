@@ -7,9 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component("userDetailsService")
+
+@Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -22,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         return userRepository.findByEmail(email)
                 .map(UserPrincipal::create)
-                .orElseThrow(() -> new ApiException(ExceptionCode.USER_NOT_FOUND, "해당 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ApiException(ExceptionCode.USER_NOT_FOUND));
     }
 
 
