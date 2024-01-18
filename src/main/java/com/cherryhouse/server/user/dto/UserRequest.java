@@ -2,33 +2,33 @@ package com.cherryhouse.server.user.dto;
 
 import com.cherryhouse.server.user.User;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserRequest {
 
     @Getter
     @Setter
-    public static class JoinDTO{
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class JoinDto{
 
-        @NotEmpty
-        private String email ;
-
-        @NotEmpty
-        private String password;
-
-        @NotEmpty
+        @NotNull
         private String username;
 
+        @NotNull
+        private String email;
 
-        public User toEntity() {
-            return User.builder()
-                    .email(email)
-                    .password(password)
-                    .username(username)
-                    .build();
-        }
+        @NotNull
+        private String password;
+
+
     }
+
+
 
 
 

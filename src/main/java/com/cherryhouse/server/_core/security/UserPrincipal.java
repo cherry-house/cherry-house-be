@@ -15,6 +15,8 @@ import java.util.List;
 @Getter
 public class UserPrincipal implements UserDetails{
 
+
+    private Long id;
     private final String email;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
