@@ -27,11 +27,11 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String profileImage;
 
     @Builder
-    public User(int id, String email, String password, String username, String profileImage){
+    public User(Long id, String email, String password, String username, String profileImage){
         this.id = id;
         this.email = email;
         this.password = password;
