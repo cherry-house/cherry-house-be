@@ -30,7 +30,7 @@ public class PostService {
             throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
         }
 
-        User user = userService.getReferenceByEmail(email);
+        User user = userService.findByEmail(email);
 
         //TODO: 위치, 태그, 사진 로직 추가
         Post post = Post.builder()
