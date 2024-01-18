@@ -1,11 +1,8 @@
-package com.cherryhouse.server._core.security.dto;
+package com.cherryhouse.server.auth;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.cherryhouse.server.user.User;
@@ -16,11 +13,10 @@ public class AuthDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class LoginRequestDto {
+    public static class LoginDto {
 
         @NotNull
         private String email;
-
         @NotNull
         private String password;
 
@@ -30,19 +26,39 @@ public class AuthDto {
                     .password(passwordEncoder.encode(password))
                     .build();
         }
-
-        public static LoginRequestDto toDto(User user){
-            return new LoginRequestDto(
+        public static LoginDto toDto(User user){
+            return new LoginDto(
                     user.getEmail(),
                     user.getPassword()
             );
         }
-
         public UsernamePasswordAuthenticationToken toAuthentication() {
             return new UsernamePasswordAuthenticationToken(email, password);
 
         }
     }
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class JoinDto{
+
+        @NotNull
+        private String username;
+        @NotNull
+        private String email;
+        @NotNull
+        private String password;
+
+        public User toEntity(PasswordEncoder passwordEncoder) {
+            return User.builder()
+                    .username(username)
+                    .email(email)
+                    .password(passwordEncoder.encode(password))
+                    .build();
+        }
+    }
 
 }

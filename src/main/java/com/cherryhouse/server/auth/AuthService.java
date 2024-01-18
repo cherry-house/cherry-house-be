@@ -1,15 +1,15 @@
-package com.cherryhouse.server._core.security.auth;
+package com.cherryhouse.server.auth;
 
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.security.TokenProvider;
 import com.cherryhouse.server._core.security.UserPrincipal;
-import com.cherryhouse.server._core.security.dto.AuthDto;
 import com.cherryhouse.server._core.security.dto.TokenDto;
 import com.cherryhouse.server.user.User;
 import com.cherryhouse.server.user.UserRepository;
 import com.cherryhouse.server.user.UserService;
 import com.cherryhouse.server.user.dto.UserRequest;
+import com.cherryhouse.server.user.dto.UserResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,16 +31,12 @@ public class AuthService {
 
 
     @Transactional
-    public User join(UserRequest.JoinDto userRequest) {
-        if( userRepository.existsByEmail(userRequest.getEmail())) {
+    public User join(AuthDto.JoinDto joinRequestDto) {
+        if( userRepository.existsByEmail(joinRequestDto.getEmail())) {
             throw new ApiException(ExceptionCode.USER_EXISTS, "이미 회원가입된 이메일입니다.");
         }
 
-        User user = User.builder()
-                .username(userRequest.getUsername())
-                .password(passwordEncoder.encode(userRequest.getPassword()))
-                .email(userRequest.getEmail())
-                .build();
+        User user = joinRequestDto.toEntity(passwordEncoder);
         UserPrincipal.create(user);
 
         return userRepository.save(user);
@@ -48,7 +44,7 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto.Response login(AuthDto.LoginRequestDto loginRequestDto){
+    public TokenDto.Response login(AuthDto.LoginDto loginRequestDto){
 
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginRequestDto.toAuthentication();

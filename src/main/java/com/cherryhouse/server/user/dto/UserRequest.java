@@ -9,27 +9,5 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserRequest {
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class JoinDto{
-
-        @NotNull
-        private String username;
-
-        @NotNull
-        private String email;
-
-        @NotNull
-        private String password;
-
-
-    }
-
-
-
-
 
 }

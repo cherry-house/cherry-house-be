@@ -29,11 +29,4 @@ public class UserService {
         );
     }
 
-    public User getReferenceByEmail(String email) {
-        // 실제 엔터티를 로드하지 않고, 프록시 객체를 반환
-        return entityManager.getReference(User.class, findByEmail(email).getId());
-    }
-
-
-
 }
