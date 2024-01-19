@@ -22,23 +22,6 @@ public class TagService {
         tags.forEach(tagName -> save(post, tagName));
     }
 
-    private void save(Post post, String tagName) {
-        Tag tag = tagRepository.findByName(tagName)
-                .orElseGet(() -> {
-                    Tag newTag = Tag.builder()
-                            .name(tagName)
-                            .build();
-                    tagRepository.save(newTag);
-                    return newTag;
-                });
-
-        PostTag postTag = PostTag.builder()
-                .post(post)
-                .tag(tag)
-                .build();
-        postTagRepository.save(postTag);
-    }
-
     public List<String> getTags(Long postId){
         return postTagRepository.findByPostId(postId)
                 .stream()
@@ -61,5 +44,27 @@ public class TagService {
                 .filter(postTag -> !tags.contains(postTag.getTag().getName()))
                 .forEach(postTag -> postTagRepository.deleteById(postTag.getId()));
 
+    }
+
+    @Transactional
+    public void delete(Long postId){
+        postTagRepository.deleteByPostId(postId);
+    }
+
+    private void save(Post post, String tagName) {
+        Tag tag = tagRepository.findByName(tagName)
+                .orElseGet(() -> {
+                    Tag newTag = Tag.builder()
+                            .name(tagName)
+                            .build();
+                    tagRepository.save(newTag);
+                    return newTag;
+                });
+
+        PostTag postTag = PostTag.builder()
+                .post(post)
+                .tag(tag)
+                .build();
+        postTagRepository.save(postTag);
     }
 }

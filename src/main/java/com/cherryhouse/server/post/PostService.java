@@ -73,6 +73,7 @@ public class PostService {
     @Transactional
     public void delete(Long postId, String email){
         getPostById(postId);
+        tagService.delete(postId);
         if (postRepository.findByIdAndUserEmail(postId,email).isEmpty() ){
             throw new ApiException(ExceptionCode.POST_NOT_FOUND , "해당 작성자가 작성한 글이 아닙니다.");
         }
