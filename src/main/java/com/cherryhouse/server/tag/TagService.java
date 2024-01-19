@@ -46,4 +46,37 @@ public class TagService {
                 .map(postTag -> postTag.getTag().getName())
                 .toList();
     }
+
+    @Transactional
+    public void update(Post post, List<String> tags){
+        List<PostTag> postTags = postTagRepository.findByPostId(post.getId());
+
+        tags.stream()
+                //tags(새로 들어온 태그) 중 가지고 있지 않은 경우만 확인하면 됨
+                .filter(tagName -> postTags.stream().noneMatch(postTag -> postTag.getTag().getName().equals(tagName)))
+                .forEach(tagName -> {
+                    //태그 테이블에 있을 경우 get 으로 가져오고, 없을 경우 새로운 태그를 생성한 후 가져옴
+                    Tag tag = tagRepository.findByName(tagName)
+                            .orElseGet(() -> {
+                                Tag newTag = Tag.builder()
+                                        .name(tagName)
+                                        .build();
+                                tagRepository.save(newTag);
+                                return newTag;
+                            });
+
+                    PostTag newPostTag = PostTag.builder()
+                            .post(post)
+                            .tag(tag)
+                            .build();
+                    postTagRepository.save(newPostTag);
+                });
+
+        //tags(새로 들어온 태그)에 없고 post tag 에 있는 태그 삭제
+        postTagRepository.findByPostId(post.getId())
+                .stream()
+                .filter(postTag -> !tags.contains(postTag.getTag().getName()))
+                .forEach(postTag -> postTagRepository.deleteById(postTag.getId()));
+
+    }
 }

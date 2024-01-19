@@ -51,7 +51,7 @@ public class PostService {
                 .category(createDto.category())
                 .content(createDto.content())
                 .build();
-        
+
         postRepository.save(post);
         tagService.create(post, createDto.tags());
     }
@@ -64,7 +64,10 @@ public class PostService {
 
         Post post = getPostById(postId);
         post.update(updateDto.title(), updateDto.content(), updateDto.category());
-        //TODO: 위치, 태그, 사진 추가
+        if(!updateDto.tags().isEmpty()){
+            tagService.update(post, updateDto.tags());
+        }
+        //TODO: 위치, 사진 추가
     }
 
     @Transactional
