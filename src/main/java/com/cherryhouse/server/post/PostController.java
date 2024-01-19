@@ -2,7 +2,6 @@ package com.cherryhouse.server.post;
 
 import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.util.ApiResponse;
-import com.cherryhouse.server._core.util.Cursor;
 import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
 import jakarta.validation.Valid;
