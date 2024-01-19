@@ -29,6 +29,8 @@ public class PostService {
     private final UserService userService;
 
     @Transactional
+    public void create(PostRequest.CreateDto createDto){
+        if(isNotCategoryValid(createDto.category())) {
     public void create(PostRequest.CreateDto createDto, String email){
         if(isNotValid(createDto.category())) {
             throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
@@ -55,7 +57,7 @@ public class PostService {
 
     @Transactional
     public void update(Long postId, PostRequest.UpdateDto updateDto){
-        if(isNotValid(updateDto.category())) {
+        if(isNotCategoryValid(updateDto.category())) {
             throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
         }
 
@@ -92,7 +94,7 @@ public class PostService {
         return postRepository.findById(postId).orElseThrow(() -> new ApiException(ExceptionCode.POST_NOT_FOUND));
     }
 
-    private boolean isNotValid(Category category) {
+    private boolean isNotCategoryValid(Category category) {
         return Arrays.stream(Category.values())
                 .noneMatch(enumValue -> enumValue.name().equals(category.name().toUpperCase()));
     }
