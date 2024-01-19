@@ -5,6 +5,7 @@ import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
+import com.cherryhouse.server.posttag.PostTagMapping;
 import com.cherryhouse.server.tag.TagService;
 import com.cherryhouse.server.user.User;
 import com.cherryhouse.server.user.UserRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -73,13 +75,17 @@ public class PostService {
 
     public PostResponse.PostDto getPost(Long postId){
         Post post = getPostById(postId);
-        return new PostResponse.PostDto(post);
+        List<String> tags = tagService.getTags(postId);
+        return new PostResponse.PostDto(post, tags);
     }
 
     public PostResponse.PostsDto getPosts(Pageable pageable){
         Page<Post> postList = postRepository.findAllOrderByCreatedDate(pageable);
         PageData pageData = getPageData(postList);
-        return PostResponse.PostsDto.of(pageData, postList.getContent());
+        List<PostTagMapping> postTagMappings = postList.stream() //post id 마다 tags 를 일급 클래스에 담아서 가지고 오기
+                .map(post -> new PostTagMapping(post.getId(), tagService.getTags(post.getId())))
+                .toList();
+        return PostResponse.PostsDto.of(pageData, postList.getContent(), postTagMappings);
     }
 
     private Post getPostById(Long postId) {
