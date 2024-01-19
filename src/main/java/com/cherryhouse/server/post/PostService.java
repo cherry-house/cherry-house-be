@@ -51,8 +51,9 @@ public class PostService {
                 .category(createDto.category())
                 .content(createDto.content())
                 .build();
+        
         postRepository.save(post);
-        return post;
+        tagService.create(post, createDto.tags());
     }
 
     @Transactional
