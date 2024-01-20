@@ -1,5 +1,6 @@
 package com.cherryhouse.server.post;
 
+import com.cherryhouse.server.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,10 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
 
     @Column(nullable = false)
     private String title;
@@ -36,8 +41,9 @@ public class Post {
     private String updatedDate;
 
     @Builder
-    public Post(String title, String content, Category category, String storeLocationX, String storeLocationY) {
+    public Post(String title,User user, String content, Category category, String storeLocationX, String storeLocationY) {
         this.title = title;
+        this.user = user;
         this.content = content;
         this.category = category;
         this.storeLocationX = storeLocationX;

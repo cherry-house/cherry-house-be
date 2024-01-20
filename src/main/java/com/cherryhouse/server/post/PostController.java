@@ -1,5 +1,6 @@
 package com.cherryhouse.server.post;
 
+import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.util.ApiResponse;
 import com.cherryhouse.server._core.util.Cursor;
 import com.cherryhouse.server.post.dto.PostRequest;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +35,8 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody @Valid PostRequest.CreateDto request, Errors errors){
-        postService.create(request);
+    public ResponseEntity<?> create(@AuthenticationPrincipal UserPrincipal userPrincipal,@RequestBody @Valid PostRequest.CreateDto request, Errors errors){
+        postService.create(request,userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
@@ -46,8 +48,8 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> delete(@PathVariable Long postId){
-        postService.delete(postId);
+    public ResponseEntity<?> delete(@AuthenticationPrincipal UserPrincipal userPrincipal,@PathVariable Long postId){
+        postService.delete(postId, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 }

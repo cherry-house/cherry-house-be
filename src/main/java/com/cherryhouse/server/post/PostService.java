@@ -5,6 +5,9 @@ import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
+import com.cherryhouse.server.user.User;
+import com.cherryhouse.server.user.UserRepository;
+import com.cherryhouse.server.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,15 +22,19 @@ import java.util.Arrays;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserService userService;
 
     @Transactional
-    public void create(PostRequest.CreateDto createDto){
+    public void create(PostRequest.CreateDto createDto, String email){
         if(isNotValid(createDto.category())) {
             throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
         }
 
+        User user = userService.findByEmail(email);
+
         //TODO: 위치, 태그, 사진 로직 추가
         Post post = Post.builder()
+                .user(user)
                 .title(createDto.title())
                 .category(createDto.category())
                 .content(createDto.content())
@@ -47,8 +54,11 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(Long postId){
+    public void delete(Long postId, String email){
         getPostById(postId);
+        if (postRepository.findByIdAndUserEmail(postId,email).isEmpty() ){
+            throw new ApiException(ExceptionCode.POST_NOT_FOUND , "해당 작성자가 작성한 글이 아닙니다.");
+        }
         postRepository.deleteById(postId);
     }
 
