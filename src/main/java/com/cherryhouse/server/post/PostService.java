@@ -31,9 +31,7 @@ public class PostService {
     public void create(PostRequest.CreateDto createDto, String email){
         User user = userService.findByEmail(email);
 
-        if(isNotCategoryValid(createDto.category())) {
-            throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
-        }
+        validateCategory(createDto.category());
 
         //TODO: 위치, 사진 추가
         Post post = Post.builder()
@@ -53,9 +51,7 @@ public class PostService {
             throw new ApiException(ExceptionCode.POST_NOT_FOUND, "해당 작성자가 작성한 글이 아닙니다.");
         }
 
-        if(isNotCategoryValid(updateDto.category())) {
-            throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
-        }
+        validateCategory(updateDto.category());
 
         Post post = getPostById(postId);
         post.update(updateDto.title(), updateDto.content(), updateDto.category());
@@ -94,9 +90,10 @@ public class PostService {
         return postRepository.findById(postId).orElseThrow(() -> new ApiException(ExceptionCode.POST_NOT_FOUND));
     }
 
-    private boolean isNotCategoryValid(Category category) {
-        return Arrays.stream(Category.values())
-                .noneMatch(enumValue -> enumValue.name().equals(category.name().toUpperCase()));
+    private void validateCategory(Category category) {
+        if (!Arrays.asList(Category.values()).contains(category)) {
+            throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
+        }
     }
 
     private PageData getPageData(Page<Post> postList) {
