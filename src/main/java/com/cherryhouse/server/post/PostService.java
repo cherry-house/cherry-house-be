@@ -8,7 +8,6 @@ import com.cherryhouse.server.post.dto.PostResponse;
 import com.cherryhouse.server.posttag.PostTagMapping;
 import com.cherryhouse.server.tag.TagService;
 import com.cherryhouse.server.user.User;
-import com.cherryhouse.server.user.UserRepository;
 import com.cherryhouse.server.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,22 +28,14 @@ public class PostService {
     private final UserService userService;
 
     @Transactional
-    public void create(PostRequest.CreateDto createDto){
-        if(isNotCategoryValid(createDto.category())) {
     public void create(PostRequest.CreateDto createDto, String email){
-        if(isNotValid(createDto.category())) {
+        User user = userService.findByEmail(email);
+
+        if(isNotCategoryValid(createDto.category())) {
             throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
         }
 
-        //TODO: 위치, 사진 로직 추가
-        Post post = save(createDto);
-        tagService.create(post, createDto.tags());
-    }
-
-    private Post save(PostRequest.CreateDto createDto) {
-        User user = userService.findByEmail(email);
-
-        //TODO: 위치, 태그, 사진 로직 추가
+        //TODO: 위치, 사진 추가
         Post post = Post.builder()
                 .user(user)
                 .title(createDto.title())
@@ -72,18 +63,18 @@ public class PostService {
 
     @Transactional
     public void delete(Long postId, String email){
-        getPostById(postId);
-        tagService.delete(postId);
-        if (postRepository.findByIdAndUserEmail(postId,email).isEmpty() ){
-            throw new ApiException(ExceptionCode.POST_NOT_FOUND , "해당 작성자가 작성한 글이 아닙니다.");
+        if (postRepository.findByIdAndUserEmail(postId, email).isEmpty()){
+            throw new ApiException(ExceptionCode.POST_NOT_FOUND, "해당 작성자가 작성한 글이 아닙니다.");
         }
+        tagService.delete(postId);
         postRepository.deleteById(postId);
     }
 
     public PostResponse.PostDto getPost(Long postId){
         Post post = getPostById(postId);
+        User user = userService.findById(post.getUser().getId());
         List<String> tags = tagService.getTags(postId);
-        return new PostResponse.PostDto(post, tags);
+        return new PostResponse.PostDto(post, tags, user);
     }
 
     public PostResponse.PostsDto getPosts(Pageable pageable){
