@@ -29,9 +29,9 @@ public class PostService {
 
     @Transactional
     public void create(PostRequest.CreateDto createDto, String email){
-        User user = userService.findByEmail(email);
-
         validateCategory(createDto.category());
+
+        User user = userService.findByEmail(email);
 
         //TODO: 위치, 사진 추가
         Post post = Post.builder()
@@ -47,13 +47,11 @@ public class PostService {
 
     @Transactional
     public void update(Long postId, PostRequest.UpdateDto updateDto, Long userId){
-        if (postRepository.findByIdAndUserId(postId, userId).isEmpty()){
-            throw new ApiException(ExceptionCode.POST_NOT_FOUND, "해당 작성자가 작성한 글이 아닙니다.");
-        }
-
+        validateAuthor(postId, userId);
         validateCategory(updateDto.category());
 
         Post post = getPostById(postId);
+
         post.update(updateDto.title(), updateDto.content(), updateDto.category());
         if(!updateDto.tags().isEmpty()){
             tagService.update(post, updateDto.tags());
@@ -63,9 +61,8 @@ public class PostService {
 
     @Transactional
     public void delete(Long postId, Long userId){
-        if (postRepository.findByIdAndUserId(postId, userId).isEmpty()){
-            throw new ApiException(ExceptionCode.POST_NOT_FOUND, "해당 작성자가 작성한 글이 아닙니다.");
-        }
+        validateAuthor(postId, userId);
+
         tagService.delete(postId);
         postRepository.deleteById(postId);
     }
@@ -93,6 +90,12 @@ public class PostService {
     private void validateCategory(Category category) {
         if (!Arrays.asList(Category.values()).contains(category)) {
             throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
+        }
+    }
+
+    private void validateAuthor(Long postId, Long userId) {
+        if (postRepository.findByIdAndUserId(postId, userId).isEmpty()){
+            throw new ApiException(ExceptionCode.POST_NOT_FOUND, "해당 작성자가 작성한 글이 아닙니다.");
         }
     }
 
