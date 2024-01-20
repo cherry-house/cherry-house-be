@@ -11,7 +11,9 @@ import java.io.IOException;
 
 @Component
 public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
     private static final Logger log = LoggerFactory.getLogger(JWTAuthenticationEntryPoint.class);
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         log.warn("자격 증명이 필요합니다 - {}", authException.getMessage());

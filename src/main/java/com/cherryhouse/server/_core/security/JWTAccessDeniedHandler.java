@@ -15,6 +15,7 @@ import java.io.IOException;
 public class JWTAccessDeniedHandler implements AccessDeniedHandler {
 
     private static final Logger log = LoggerFactory.getLogger(JWTAccessDeniedHandler.class);
+
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.warn("권한이 없습니다.: {}", accessDeniedException.getMessage());

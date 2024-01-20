@@ -43,7 +43,6 @@ public class TagService {
                 .stream()
                 .filter(postTag -> !tags.contains(postTag.getTag().getName()))
                 .forEach(postTag -> postTagRepository.deleteById(postTag.getId()));
-
     }
 
     @Transactional

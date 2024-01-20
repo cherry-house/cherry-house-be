@@ -14,36 +14,32 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
-
 
 //스프링 시큐리티 필터가 스프링 필터체인에 등록 된다.
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final TokenProvider tokenProvider;
     private final JWTAccessDeniedHandler jwtAccessDeniedHandler;
     private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
        http
                //토큰 사용 방식 -> csrf disable
                .csrf(AbstractHttpConfigurer::disable);
-        http.csrf(
-                csrfCustomizer -> csrfCustomizer
-                        .ignoringRequestMatchers(antMatcher("/h2-console/**"))
-                        .disable()
-        );
-
+       http.csrf(
+               csrfCustomizer -> csrfCustomizer
+                       .ignoringRequestMatchers(antMatcher("/h2-console/**"))
+                       .disable()
+       );
 
        http.headers(
                // h2-console에서 iframe을 사용함. X-Frame-Options을 위해 sameOrigin 설정
@@ -118,7 +114,6 @@ public class SecurityConfig {
 //        return httpSecurity.build();
     }
 
-
     //@Bean - 해당 메서드의 리턴되는 오브젝트트를 IoC로 등록해준다
     //비밀번호 암호화를 위한 메서드
     @Bean
@@ -126,5 +121,4 @@ public class SecurityConfig {
         // BCrypt Encoder 사용
         return new BCryptPasswordEncoder();
     }
-
 }
