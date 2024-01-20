@@ -48,7 +48,11 @@ public class PostService {
     }
 
     @Transactional
-    public void update(Long postId, PostRequest.UpdateDto updateDto){
+    public void update(Long postId, PostRequest.UpdateDto updateDto, Long userId){
+        if (postRepository.findByIdAndUserId(postId, userId).isEmpty()){
+            throw new ApiException(ExceptionCode.POST_NOT_FOUND, "해당 작성자가 작성한 글이 아닙니다.");
+        }
+
         if(isNotCategoryValid(updateDto.category())) {
             throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "카테고리 입력이 올바르지 않습니다.");
         }
@@ -62,8 +66,8 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(Long postId, String email){
-        if (postRepository.findByIdAndUserEmail(postId, email).isEmpty()){
+    public void delete(Long postId, Long userId){
+        if (postRepository.findByIdAndUserId(postId, userId).isEmpty()){
             throw new ApiException(ExceptionCode.POST_NOT_FOUND, "해당 작성자가 작성한 글이 아닙니다.");
         }
         tagService.delete(postId);

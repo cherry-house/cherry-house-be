@@ -15,7 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllOrderByCreatedDate(Pageable pageable);
 
     @Query("select p from Post p " +
-            "where p.user.email = :email " +
+            "where p.user.id = :userId " +
             "and p.id = :id")
-    Optional<Post> findByIdAndUserEmail(Long id, String email);
+    Optional<Post> findByIdAndUserId(Long id, Long userId);
 }
