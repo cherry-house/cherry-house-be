@@ -17,5 +17,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("select p from Post p " +
             "where p.user.email = :email " +
             "and p.id = :id")
-    Optional<Post> findByIdAndUserEmail( Long id, String email );
+    Optional<Post> findByIdAndUserEmail(Long id, String email);
 }

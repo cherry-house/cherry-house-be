@@ -7,9 +7,6 @@ import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.security.dto.TokenDto;
 import com.cherryhouse.server.user.User;
 import com.cherryhouse.server.user.UserRepository;
-import com.cherryhouse.server.user.UserService;
-import com.cherryhouse.server.user.dto.UserRequest;
-import com.cherryhouse.server.user.dto.UserResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +22,6 @@ public class AuthService {
 
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
-    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
@@ -40,7 +36,6 @@ public class AuthService {
         UserPrincipal.create(user);
 
         return userRepository.save(user);
-
     }
 
     @Transactional
@@ -56,14 +51,10 @@ public class AuthService {
         TokenDto.Response tokenResponseDto = tokenProvider.createToken(authentication);
 
         return tokenResponseDto;
-
-
     }
 
     @Transactional
     public void logout(TokenDto.Request tokenRequest, HttpServletRequest request){
         Authentication authentication = tokenProvider.getAuthentication(tokenRequest.getAccessToken(),request);
     }
-
-
 }

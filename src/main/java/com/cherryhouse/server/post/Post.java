@@ -33,15 +33,13 @@ public class Post {
     private Category category;
 
     private String storeLocationX;
-
     private String storeLocationY;
-
     private String createdDate;
-
     private String updatedDate;
 
     @Builder
-    public Post(String title,User user, String content, Category category, String storeLocationX, String storeLocationY) {
+    public Post(String title, User user, String content, Category category,
+                String storeLocationX, String storeLocationY) {
         this.title = title;
         this.user = user;
         this.content = content;

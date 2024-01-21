@@ -1,12 +1,9 @@
 package com.cherryhouse.server.user;
 
-import com.cherryhouse.server.post.Category;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -39,8 +36,7 @@ public class User {
         this.profileImage = profileImage;
     }
 
-    public void updatePassword(String password) { this.password = password ;}
-
-
-
+    public void updatePassword(String password){
+        this.password = password;
+    }
 }

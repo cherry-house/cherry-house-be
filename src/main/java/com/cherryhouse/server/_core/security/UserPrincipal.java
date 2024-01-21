@@ -15,7 +15,6 @@ import java.util.List;
 @Getter
 public class UserPrincipal implements UserDetails{
 
-
     private Long id;
     private final String email;
     private final String password;
@@ -26,8 +25,6 @@ public class UserPrincipal implements UserDetails{
         this.password = password;
         this.authorities = authorities;
     }
-
-
 
     //해당 유저의 권한 리턴
     public static UserPrincipal create(User user) {

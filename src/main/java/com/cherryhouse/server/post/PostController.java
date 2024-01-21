@@ -2,7 +2,6 @@ package com.cherryhouse.server.post;
 
 import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.util.ApiResponse;
-import com.cherryhouse.server._core.util.Cursor;
 import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
 import jakarta.validation.Valid;
@@ -35,20 +34,23 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@AuthenticationPrincipal UserPrincipal userPrincipal,@RequestBody @Valid PostRequest.CreateDto request, Errors errors){
-        postService.create(request,userPrincipal.getEmail());
+    public ResponseEntity<?> create(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                    @RequestBody @Valid PostRequest.CreateDto request, Errors errors){
+        postService.create(request, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<?> update(@PathVariable Long postId,
+    public ResponseEntity<?> update(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                    @PathVariable Long postId,
                                     @RequestBody @Valid PostRequest.UpdateDto request, Errors errors){
-        postService.update(postId, request);
+        postService.update(postId, request, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> delete(@AuthenticationPrincipal UserPrincipal userPrincipal,@PathVariable Long postId){
+    public ResponseEntity<?> delete(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                    @PathVariable Long postId){
         postService.delete(postId, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }

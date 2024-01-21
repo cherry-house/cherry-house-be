@@ -1,7 +1,6 @@
 package com.cherryhouse.server.auth;
 
 import com.cherryhouse.server._core.util.ApiResponse;
-import com.cherryhouse.server.user.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,12 +27,4 @@ public class AuthController {
         authService.login(loginDto);
         return ResponseEntity.ok().body(ApiResponse.success(authService.login(loginDto)));
     }
-
-
-
-
-
-
-
-
 }
