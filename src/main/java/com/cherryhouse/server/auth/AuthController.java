@@ -29,14 +29,14 @@ public class AuthController {
         return ResponseEntity.ok().body(ApiResponse.success(authService.login(request)));
     }
 
-    @PostMapping("/email-verification-code")
+    @PostMapping("/send-verification-code")
     public ResponseEntity<?> sendVerificationCode(@RequestBody @Valid AuthRequest.SendVerificationCodeDto request, Errors errors) {
-        authService.sendVerificationCode(request);
+        authService.emailVerification(request);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
-    @PostMapping("/email-verification")
-    public ResponseEntity<?> emailVerification(@RequestBody @Valid AuthRequest.EmailVerificationDto request, Errors errors) {
+    @PostMapping("/confirm-verification-code")
+    public ResponseEntity<?> confirmVerificationCode(@RequestBody @Valid AuthRequest.ConfirmVerificationCodeDto request, Errors errors) {
         authService.emailVerification(request);
         return ResponseEntity.ok().body(ApiResponse.success());
     }

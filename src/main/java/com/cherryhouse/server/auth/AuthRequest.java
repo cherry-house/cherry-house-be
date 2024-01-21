@@ -64,7 +64,7 @@ public class AuthRequest {
             String email
     ){}
 
-    public record EmailVerificationDto(
+    public record ConfirmVerificationCodeDto(
 
             @Email
             @NotBlank(message = "이메일은 필수 입력입니다")
