@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import static com.cherryhouse.server.auth.CodeGenerator.generateCode;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -31,9 +33,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JavaMailSender javaMailSender;
-
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789!@#$%";
-    private static final int CODE_LENGTH = 8;
 
     @Transactional
     public void join(AuthRequest.JoinDto joinDto) {
@@ -69,34 +68,20 @@ public class AuthService {
 
     @Transactional
     public void sendVerificationCode(AuthRequest.SendVerificationCodeDto sendDto){
-        String code = createCode();
-
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(sendDto.email());
         message.setSubject("메일 인증 번호입니다.");
-        message.setText("인증번호: " + code);
-
+        message.setText("인증번호: " + generateCode());
         javaMailSender.send(message);
     }
 
     @Transactional
     public void confirmVerificationCode(AuthRequest.ConfirmVerificationCodeDto confirmDto){
-
-    }
-
-    private String createCode(){
-        try {
-            SecureRandom secureRandom = SecureRandom.getInstanceStrong();
-            StringBuilder code = new StringBuilder();
-
-            for(int i = 0; i <= CODE_LENGTH; i++){
-                int index = secureRandom.nextInt(CHARACTERS.length());
-                code.append(CHARACTERS.charAt(index));
-            }
-
-            return code.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new ApiException(ExceptionCode.EMAIL_CODE_CREATION_FAILED);
+        String code = "임시";
+        if(!confirmDto.code().equals(code)){
+            throw new ApiException(ExceptionCode.EMAIL_CODE_MATCH_FAILED);
         }
     }
+
+
 }
