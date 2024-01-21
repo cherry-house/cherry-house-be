@@ -18,9 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-
 import static com.cherryhouse.server.auth.CodeGenerator.generateCode;
 
 @Service
@@ -36,7 +33,7 @@ public class AuthService {
 
     @Transactional
     public void join(AuthRequest.JoinDto joinDto) {
-        if( userRepository.existsByEmail(joinDto.email())) {
+        if(userRepository.existsByEmail(joinDto.email())) {
             throw new ApiException(ExceptionCode.USER_EXISTS, "이미 회원가입된 이메일입니다.");
         }
 
