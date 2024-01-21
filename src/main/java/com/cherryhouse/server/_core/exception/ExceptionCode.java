@@ -12,7 +12,7 @@ public enum ExceptionCode {
     USER_EXISTS(HttpStatus.BAD_REQUEST, "이미 회원가입된 이메일입니다."),
     INVALID_TOKEN_EXCEPTION(HttpStatus.NOT_FOUND,"유효하지 않은 토큰입니다."),
     EMAIL_CODE_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 인증 코드 생성에 실패했습니다."),
-    EMAIL_CODE_MATCH_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 인증 코드가 일치하지 않습니다."),
+    EMAIL_CODE_MATCH_FAILED(HttpStatus.BAD_REQUEST, "이메일 인증 코드가 일치하지 않습니다."),
 
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게시글을 찾을 수 없습니다."),
 
