@@ -11,6 +11,10 @@ public class CodeGenerator {
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789!@#$%";
     private static final int CODE_LENGTH = 8;
 
+    private CodeGenerator() {
+        throw new ApiException(ExceptionCode.EMAIL_CODE_CREATION_FAILED);
+    }
+
     public static String generateCode(){
         try {
             SecureRandom secureRandom = SecureRandom.getInstanceStrong();

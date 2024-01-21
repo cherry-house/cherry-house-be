@@ -82,6 +82,4 @@ public class AuthService {
             throw new ApiException(ExceptionCode.EMAIL_CODE_MATCH_FAILED);
         }
     }
-
-
 }
