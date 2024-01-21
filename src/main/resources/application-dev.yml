@@ -29,7 +29,11 @@ spring:
           max-active: 8
       port: 6379
       host: 127.0.01
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
 
 jwt:
   secret: Y2hlcnJ5aG91c2V3ZWJkZXZlbG9wbWVudDIwMjR3aW50ZXJwcm9qZWN0Y2hlcnJ5aG91c2V3ZWJkZXZlbG9wbWVudDIwMjR3aW50ZXJwcm9qZWN0
