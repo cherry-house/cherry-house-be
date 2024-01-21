@@ -31,13 +31,13 @@ public class AuthController {
 
     @PostMapping("/send-verification-code")
     public ResponseEntity<?> sendVerificationCode(@RequestBody @Valid AuthRequest.SendVerificationCodeDto request, Errors errors) {
-        authService.emailVerification(request);
+        authService.sendVerificationCode(request);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @PostMapping("/confirm-verification-code")
     public ResponseEntity<?> confirmVerificationCode(@RequestBody @Valid AuthRequest.ConfirmVerificationCodeDto request, Errors errors) {
-        authService.emailVerification(request);
+        authService.confirmVerificationCode(request);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 }
