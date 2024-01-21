@@ -36,4 +36,4 @@ spring:
     password: ${MAIL_PASSWORD}
 
 jwt:
-  secret: Y2hlcnJ5aG91c2V3ZWJkZXZlbG9wbWVudDIwMjR3aW50ZXJwcm9qZWN0Y2hlcnJ5aG91c2V3ZWJkZXZlbG9wbWVudDIwMjR3aW50ZXJwcm9qZWN0
+  secret: ${SECRET_KEY}
