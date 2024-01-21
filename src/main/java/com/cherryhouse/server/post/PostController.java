@@ -44,14 +44,14 @@ public class PostController {
     public ResponseEntity<?> update(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                     @PathVariable Long postId,
                                     @RequestBody @Valid PostRequest.UpdateDto request, Errors errors){
-        postService.update(postId, request, userPrincipal.getId());
+        postService.update(postId, request, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                     @PathVariable Long postId){
-        postService.delete(postId, userPrincipal.getId());
+        postService.delete(postId, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 }

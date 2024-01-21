@@ -46,8 +46,8 @@ public class PostService {
     }
 
     @Transactional
-    public void update(Long postId, PostRequest.UpdateDto updateDto, Long userId){
-        validateAuthor(postId, userId);
+    public void update(Long postId, PostRequest.UpdateDto updateDto, String email){
+        validateAuthor(postId, email);
         validateCategory(updateDto.category());
 
         Post post = getPostById(postId);
@@ -60,8 +60,8 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(Long postId, Long userId){
-        validateAuthor(postId, userId);
+    public void delete(Long postId, String email){
+        validateAuthor(postId, email);
 
         tagService.delete(postId);
         postRepository.deleteById(postId);
@@ -93,8 +93,8 @@ public class PostService {
         }
     }
 
-    private void validateAuthor(Long postId, Long userId) {
-        if (postRepository.findByIdAndUserId(postId, userId).isEmpty()){
+    private void validateAuthor(Long postId, String email) {
+        if (postRepository.findByIdAndUserEmail(postId, email).isEmpty()){
             throw new ApiException(ExceptionCode.POST_NOT_FOUND, "해당 작성자가 작성한 글이 아닙니다.");
         }
     }
