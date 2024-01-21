@@ -20,13 +20,13 @@ public class UserService {
 
     public User findById(Long id){
         return userRepository.findById(id).orElseThrow(
-                ()-> new ApiException(ExceptionCode.USER_NOT_FOUND, "해당 사용자를 찾을 수 없습니다.")
+                ()-> new ApiException(ExceptionCode.USER_NOT_FOUND)
         );
     }
 
     public User findByEmail(String email){
         return userRepository.findByEmail(email).orElseThrow(
-                ()-> new ApiException(ExceptionCode.USER_NOT_FOUND, "해당 사용자를 찾을 수 없습니다.")
+                ()-> new ApiException(ExceptionCode.USER_NOT_FOUND)
         );
     }
 }
