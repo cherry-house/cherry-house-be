@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.cherryhouse.server._core.util.PageData.getPageData;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -97,16 +99,5 @@ public class PostService {
         if (postRepository.findByIdAndUserEmail(postId, email).isEmpty()){
             throw new ApiException(ExceptionCode.POST_NOT_FOUND, "해당 작성자가 작성한 글이 아닙니다.");
         }
-    }
-
-    private PageData getPageData(Page<Post> postList) {
-        return new PageData(
-                postList.getTotalElements(),
-                postList.getTotalPages(),
-                postList.isLast(),
-                postList.isFirst(),
-                postList.getNumber(),
-                postList.getSize()
-        );
     }
 }
