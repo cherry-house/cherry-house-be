@@ -5,8 +5,6 @@ import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.security.TokenProvider;
 import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.security.dto.TokenDto;
-import com.cherryhouse.server.auth.refreshToken.RefreshToken;
-import com.cherryhouse.server.auth.refreshToken.RefreshTokenRepository;
 import com.cherryhouse.server.user.User;
 import com.cherryhouse.server.user.UserRepository;
 import io.jsonwebtoken.Jwts;
@@ -46,7 +44,6 @@ public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JavaMailSender javaMailSender;
     private final RedisTemplate<String,String> redisTemplate;
-    private final RefreshTokenRepository refreshTokenRepository;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
     @Transactional
     public void join(AuthRequest.JoinDto joinDto) {
@@ -74,7 +71,7 @@ public class AuthService {
 
         redisTemplate.opsForValue().set(
                 authentication.getName(),
-                tokenResponseDto.getRefreshToken().getRefreshToken(),
+                tokenResponseDto.getRefreshToken(),
                 REFRESH_TOKEN_EXPIRE_TIME,
                 TimeUnit.SECONDS
         );
@@ -138,7 +135,7 @@ public class AuthService {
 
         redisTemplate.opsForValue().set(
                 authentication.getName(),
-                tokenResponseDto.getRefreshToken().getRefreshToken(),
+                tokenResponseDto.getRefreshToken(),
                 REFRESH_TOKEN_EXPIRE_TIME,
                 TimeUnit.SECONDS
         );

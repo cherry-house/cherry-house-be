@@ -27,7 +27,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid AuthRequest.LoginDto request, Errors errors) {
         TokenDto.Response response = authService.login(request);
-        HttpCookie httpCookie = ResponseCookie.from("refresh-token", response.getRefreshToken().getRefreshToken())
+        HttpCookie httpCookie = ResponseCookie.from("refresh-token", response.getRefreshToken())
                 .maxAge(REFRESH_TOKEN_EXPIRE_TIME)
                 .httpOnly(true)
                 .secure(true)

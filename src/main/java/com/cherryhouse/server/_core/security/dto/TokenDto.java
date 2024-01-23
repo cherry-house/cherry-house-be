@@ -1,5 +1,4 @@
 package com.cherryhouse.server._core.security.dto;
-import com.cherryhouse.server.auth.refreshToken.RefreshToken;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +13,7 @@ public class TokenDto {
     public static class Response {
         private String grantType;
         private String accessToken;
-        private RefreshToken refreshToken;
+        private String refreshToken;
         private Long accessTokenExpiresIn;
     }
 
