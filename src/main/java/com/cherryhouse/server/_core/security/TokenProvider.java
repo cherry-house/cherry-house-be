@@ -5,7 +5,6 @@ import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.security.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -37,7 +35,8 @@ public class TokenProvider {
     private final Key key;
 
 
-    public TokenProvider(@Value("${jwt.secret}") String secretKey) {
+
+    public TokenProvider(@Value("${jwt.secret}") String secretKey ) {
         byte[] keyBytes = secretKey.getBytes();
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -81,7 +80,7 @@ public class TokenProvider {
 
 
     //JWT 토큰을 복호화 하여 토큰에 들어있는 정보를 꺼냄
-    public Authentication getAuthentication(String token, HttpServletRequest request) {
+    public Authentication getAuthentication(String token) {
 
         //토큰 복호화
         Claims claims = parseClaims(token);
@@ -105,7 +104,7 @@ public class TokenProvider {
 
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, "", authorities);
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        //authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         return authentication;
     }
 
@@ -138,5 +137,18 @@ public class TokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    public long getAccessTokenExpireTime(){
+        return ACCESS_TOKEN_EXPIRE_TIME;
+    }
+
+    public Long getExpiration( String accessToken){
+        Date expiration = Jwts.parserBuilder().setSigningKey(key)
+                .build().parseClaimsJws(accessToken).getBody().getExpiration();
+
+        long now = new Date().getTime();
+
+        return (expiration.getTime() - now);
     }
 }
