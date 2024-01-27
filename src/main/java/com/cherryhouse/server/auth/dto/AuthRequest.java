@@ -1,10 +1,8 @@
-package com.cherryhouse.server.auth;
+package com.cherryhouse.server.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import com.cherryhouse.server.user.User;
 
 public class AuthRequest {
 
@@ -17,20 +15,6 @@ public class AuthRequest {
             @NotBlank(message = "비밀번호는 필수 입력입니다")
             String password
     ){
-        public User toEntity(PasswordEncoder passwordEncoder){
-            return User.builder()
-                    .email(email)
-                    .password(passwordEncoder.encode(password))
-                    .build();
-        }
-
-        public static LoginDto toDto(User user){
-            return new LoginDto(
-                    user.getEmail(),
-                    user.getPassword()
-            );
-        }
-
         public UsernamePasswordAuthenticationToken toAuthentication(){
             return new UsernamePasswordAuthenticationToken(email, password);
         }
@@ -47,15 +31,7 @@ public class AuthRequest {
 
             @NotBlank(message = "비밀번호는 필수 입력입니다")
             String password
-    ){
-        public User toEntity(PasswordEncoder passwordEncoder){
-            return User.builder()
-                    .username(username)
-                    .email(email)
-                    .password(passwordEncoder.encode(password))
-                    .build();
-        }
-    }
+    ){}
 
     public record SendVerificationCodeDto(
 
