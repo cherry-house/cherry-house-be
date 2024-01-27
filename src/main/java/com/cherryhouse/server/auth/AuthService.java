@@ -5,8 +5,9 @@ import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.security.TokenProvider;
 import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.security.dto.TokenDto;
+import com.cherryhouse.server.auth.dto.AuthRequest;
 import com.cherryhouse.server.user.User;
-import com.cherryhouse.server.user.UserRepository;
+import com.cherryhouse.server.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -14,7 +15,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.TimeUnit;
@@ -28,22 +28,17 @@ import static com.cherryhouse.server.auth.CodeGenerator.generateCode;
 public class AuthService {
 
     private final TokenProvider tokenProvider;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JavaMailSender javaMailSender;
     private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public void join(AuthRequest.JoinDto joinDto){
-        if(userRepository.existsByEmail(joinDto.email())) {
-            throw new ApiException(ExceptionCode.USER_EXISTS, "이미 회원가입된 이메일입니다.");
-        }
+        userService.existsByEmail(joinDto.email());
 
-        User user = joinDto.toEntity(passwordEncoder);
+        User user = userService.save(joinDto);
         UserPrincipal.create(user);
-
-        userRepository.save(user);
     }
 
     @Transactional
@@ -127,10 +122,9 @@ public class AuthService {
 
     @Transactional
     public void sendVerificationCode(AuthRequest.SendVerificationCodeDto sendDto){
-        //TODO: 중복 확인
+        userService.existsByEmail(sendDto.email());
 
         String code = generateCode();
-
         redisTemplate.opsForValue().set(
                 sendDto.email() + ":verification_code",
                 code,
