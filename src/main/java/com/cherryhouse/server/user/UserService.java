@@ -3,10 +3,12 @@ package com.cherryhouse.server.user;
 
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
+import com.cherryhouse.server.auth.dto.AuthRequest;
 import com.cherryhouse.server.s3.S3Service;
 import com.cherryhouse.server.style.Style;
 import com.cherryhouse.server.style.StyleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,9 +26,24 @@ public class UserService {
     public final UserRepository userRepository;
     public final StyleRepository styleRepository;
     public final S3Service s3Service;
+    private final PasswordEncoder passwordEncoder;
 
-    public boolean existsCheckByEmail(String email){
-        return userRepository.existsByEmail(email);
+    @Transactional
+    public User save(AuthRequest.JoinDto joinDto){
+        User user = User.builder()
+                .username(joinDto.username())
+                .email(joinDto.email())
+                .password(passwordEncoder.encode(joinDto.password()))
+                .build();
+
+        userRepository.save(user);
+        return user;
+    }
+
+    public void existsByEmail(String email){
+        if(userRepository.existsByEmail(email)) {
+            throw new ApiException(ExceptionCode.USER_EXISTS, "이미 회원가입된 이메일입니다.");
+        }
     }
 
     public User findById(Long id){
