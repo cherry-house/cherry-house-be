@@ -30,21 +30,21 @@ public class TokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;            // 1시간
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
+    public static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
 
     private final Key key;
 
-
-
-    public TokenProvider(@Value("${jwt.secret}") String secretKey ) {
+    public TokenProvider(@Value("${jwt.secret}") String secretKey){
         byte[] keyBytes = secretKey.getBytes();
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenDto.Response createToken(Authentication auth) {
+    public TokenDto.Response createToken(Authentication auth){
 
         //권한 가져오기
-        String authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+        String authorities = auth.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
@@ -59,8 +59,8 @@ public class TokenProvider {
         String accessToken = Jwts.builder()
                 .setSubject(userPrincipal.getEmail())
                 .setClaims(claims) // 정보 저장
-                .signWith(key, SignatureAlgorithm.HS512) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret값 세팅
-                .setExpiration(accessTokenExpire) // set Expire Time 해당 옵션 안넣으면 expire안함
+                .signWith(key, SignatureAlgorithm.HS512) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret 값 세팅
+                .setExpiration(accessTokenExpire) // set Expire Time 해당 옵션 안넣으면 expire 안함
                 .compact();
 
         Date  refreshTokenExpire = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
@@ -78,9 +78,8 @@ public class TokenProvider {
                 .build();
     }
 
-
     //JWT 토큰을 복호화 하여 토큰에 들어있는 정보를 꺼냄
-    public Authentication getAuthentication(String token) {
+    public Authentication getAuthentication(String token){
 
         //토큰 복호화
         Claims claims = parseClaims(token);
@@ -89,29 +88,23 @@ public class TokenProvider {
             throw new ApiException(ExceptionCode.INVALID_TOKEN_EXCEPTION, "유효하지 않은 토큰입니다.");
         }
 
-
         //권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+                        .toList();
 
         UserDetails principal = new UserPrincipal(
                 claims.get(USER_EMAIL).toString(),
                 "",
-                authorities);
+                authorities
+        );
 
-
-
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, "", authorities);
-        //authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        return authentication;
+        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-
-
     //토큰 유효성 검증
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token){
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
@@ -127,7 +120,7 @@ public class TokenProvider {
         return false;
     }
 
-    private Claims parseClaims(String accessToken) {
+    private Claims parseClaims(String accessToken){
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -144,8 +137,12 @@ public class TokenProvider {
     }
 
     public Long getExpiration( String accessToken){
-        Date expiration = Jwts.parserBuilder().setSigningKey(key)
-                .build().parseClaimsJws(accessToken).getBody().getExpiration();
+        Date expiration = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .getExpiration();
 
         long now = new Date().getTime();
 
