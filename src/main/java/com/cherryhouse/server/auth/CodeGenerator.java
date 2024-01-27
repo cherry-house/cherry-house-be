@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 
 public class CodeGenerator {
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789!@#$%";
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789!@#$%";
     private static final int CODE_LENGTH = 8;
 
     private CodeGenerator() {
