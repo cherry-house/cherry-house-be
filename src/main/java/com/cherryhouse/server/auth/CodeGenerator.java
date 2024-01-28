@@ -12,7 +12,7 @@ public class CodeGenerator {
     private static final int CODE_LENGTH = 8;
 
     private CodeGenerator() {
-        throw new ApiException(ExceptionCode.EMAIL_CODE_CREATION_FAILED);
+        throw new ApiException(ExceptionCode.EMAIL_CREATION_FAILED);
     }
 
     public static String generateCode(){
@@ -27,7 +27,7 @@ public class CodeGenerator {
 
             return code.toString();
         } catch (NoSuchAlgorithmException e) {
-            throw new ApiException(ExceptionCode.EMAIL_CODE_CREATION_FAILED);
+            throw new ApiException(ExceptionCode.EMAIL_CREATION_FAILED);
         }
     }
 }
