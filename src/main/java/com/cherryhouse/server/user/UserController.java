@@ -3,7 +3,6 @@ package com.cherryhouse.server.user;
 
 import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.util.ApiResponse;
-import com.cherryhouse.server.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,20 +17,18 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+
     @PostMapping("/style")
-    public ResponseEntity<?> uploadStyle(
-            @AuthenticationPrincipal UserPrincipal userPrincipal
-            , @RequestParam("file") List<MultipartFile> file){
+    public ResponseEntity<?> uploadStyle(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                         @RequestParam("file") List<MultipartFile> file){
         userService.uploadStyle(file,userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @DeleteMapping("/style")
-    public ResponseEntity<?> deleteStyle(
-            @AuthenticationPrincipal UserPrincipal userPrincipal
-            , @RequestParam("file") String filePath){
+    public ResponseEntity<?> deleteStyle(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                         @RequestParam("file") String filePath){
         userService.deleteStyle(filePath,userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
-
 }

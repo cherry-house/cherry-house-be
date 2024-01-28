@@ -29,6 +29,5 @@ public class Image{
         this.id = id;
         this.imgUrl = imgUrl;
         this.post = post;
-
     }
 }

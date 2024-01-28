@@ -1,4 +1,4 @@
-package com.cherryhouse.server.auth;
+package com.cherryhouse.server.auth.mail;
 
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
@@ -8,11 +8,11 @@ import java.security.SecureRandom;
 
 public class CodeGenerator {
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789!@#$%";
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789!@#$%";
     private static final int CODE_LENGTH = 8;
 
     private CodeGenerator() {
-        throw new ApiException(ExceptionCode.EMAIL_CODE_CREATION_FAILED);
+        throw new ApiException(ExceptionCode.EMAIL_CREATION_FAILED);
     }
 
     public static String generateCode(){
@@ -27,7 +27,7 @@ public class CodeGenerator {
 
             return code.toString();
         } catch (NoSuchAlgorithmException e) {
-            throw new ApiException(ExceptionCode.EMAIL_CODE_CREATION_FAILED);
+            throw new ApiException(ExceptionCode.EMAIL_CREATION_FAILED);
         }
     }
 }

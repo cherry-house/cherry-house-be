@@ -8,7 +8,6 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
-import com.cherryhouse.server.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,6 @@ import java.util.UUID;
 public class S3Service {
 
     private static final Logger log = LoggerFactory.getLogger(S3Service.class);
-
 
     private final AmazonS3 amazonS3;
 
@@ -61,13 +59,13 @@ public class S3Service {
         return fileNameList;
     }
 
-    private String createFilePathName(String originalFilename, String folderName) {
+    private String createFilePathName(String originalFilename, String folderName){
         String filename = UUID.randomUUID().toString().concat(getFileExtension(originalFilename));
         String path = folderName + "/" + filename;
         return path;
     }
 
-    private String getFileExtension(String originalFilename) {
+    private String getFileExtension(String originalFilename){
         try {
             return originalFilename.substring(originalFilename.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
@@ -78,7 +76,4 @@ public class S3Service {
     public void delete(String fileName){
         amazonS3.deleteObject(new DeleteObjectRequest(bucket,fileName));
     }
-
-
-
 }
