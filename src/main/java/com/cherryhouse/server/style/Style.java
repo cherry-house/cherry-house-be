@@ -22,7 +22,6 @@ public class Style{
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-
     @Builder
     public Style(Long id, String imgUrl, User user){
         this.id = id;

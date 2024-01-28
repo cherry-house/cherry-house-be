@@ -1,6 +1,5 @@
 package com.cherryhouse.server.style;
 
-import com.cherryhouse.server.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
