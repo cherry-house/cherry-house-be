@@ -6,12 +6,13 @@ import com.cherryhouse.server._core.security.TokenProvider;
 import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.security.dto.TokenDto;
 import com.cherryhouse.server.auth.dto.AuthRequest;
+import com.cherryhouse.server.auth.mail.MailSender;
 import com.cherryhouse.server.user.User;
 import com.cherryhouse.server.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.TimeUnit;
 
 import static com.cherryhouse.server._core.security.TokenProvider.REFRESH_TOKEN_EXPIRE_TIME;
-import static com.cherryhouse.server.auth.CodeGenerator.generateCode;
+import static com.cherryhouse.server.auth.mail.CodeGenerator.generateCode;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +31,8 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final UserService userService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final JavaMailSender javaMailSender;
     private final RedisTemplate<String, String> redisTemplate;
+    private final MailSender mailSender; //인터페이스로 선언
 
     @Transactional
     public void join(AuthRequest.JoinDto joinDto){
@@ -132,11 +133,7 @@ public class AuthService {
                 TimeUnit.MINUTES
         );
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(sendDto.email());
-        message.setSubject("메일 인증 번호입니다.");
-        message.setText("인증번호: " + code);
-        javaMailSender.send(message);
+        mailSender.send(sendDto.email(), code);
     }
 
     @Transactional
