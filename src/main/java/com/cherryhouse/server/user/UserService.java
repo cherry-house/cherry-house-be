@@ -35,12 +35,14 @@ public class UserService {
         );
     }
 
+
     public User findByEmail(String email){
         return userRepository.findByEmail(email).orElseThrow(
                 ()-> new ApiException(ExceptionCode.USER_NOT_FOUND)
         );
     }
 
+    @Transactional
     public void uploadStyle(List<MultipartFile> file, String email) {
         User user = findByEmail(email);
         List<String> fileNames = s3Service.upload(file,"style");
