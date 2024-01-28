@@ -1,4 +1,4 @@
-package com.cherryhouse.server.auth;
+package com.cherryhouse.server.auth.mail;
 
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
