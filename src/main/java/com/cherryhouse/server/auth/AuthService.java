@@ -10,8 +10,6 @@ import com.cherryhouse.server.auth.mail.MailSender;
 import com.cherryhouse.server.user.User;
 import com.cherryhouse.server.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

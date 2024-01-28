@@ -14,7 +14,6 @@ public class GmailSender implements MailSender {
     private final JavaMailSender javaMailSender;
 
     public void send(String to, String code){
-        System.out.println("ggmail sender");
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("메일 인증 번호입니다.");
