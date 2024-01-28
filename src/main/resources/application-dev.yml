@@ -36,12 +36,12 @@ spring:
     password: ${MAIL_PASSWORD}
 
 jwt:
-  secret: ${SECRET_KEY}
+  secret: ${JWT_SECRET_KEY}
 
 cloud:
   aws:
     s3:
-      bucket: cherry-house-bucket
+      bucket: ${S3_BUCKET}
     credentials:
       access-key:  ${AWS_ACCESS_KEY}
       secret-key: ${AWS_SECRET_KEY}
@@ -50,10 +50,3 @@ cloud:
       auto: false
     stack:
       auto: false
-
-
-
-
-
-
-
