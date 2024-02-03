@@ -3,7 +3,6 @@ package com.cherryhouse.server.post;
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.util.PageData;
-import com.cherryhouse.server.post.image.Image;
 import com.cherryhouse.server.post.image.ImageMapping;
 import com.cherryhouse.server.post.image.ImageService;
 import com.cherryhouse.server.post.dto.PostRequest;
@@ -35,31 +34,23 @@ public class PostService {
     private final ImageService imageService;
 
     public PostResponse.PostsDto getPosts(Pageable pageable){
-        Page<Post> postList = postRepository.findAllOrderByCreatedDate(pageable);
+        Page<Post> posts = postRepository.findAllOrderByCreatedDate(pageable);
 
-        PageData pageData = getPageData(postList);
-        List<PostTagMapping> postTagMappings = postList.stream() //post id 마다 tags 를 일급 클래스에 담아서 가지고 오기
+        PageData pageData = getPageData(posts);
+        List<PostTagMapping> postTagMappings = posts.stream() //post id 마다 tags 를 일급 클래스에 담아서 가지고 오기
                 .map(post -> new PostTagMapping(post.getId(), tagService.getTags(post.getId())))
                 .toList();
-        List<ImageMapping> imageMappings = postList.stream()
-                .map(post -> {
-                    List<ImageMapping.ImageDto> images = imageService.getImages(post.getId())
-                            .stream()
-                            .map(image -> new ImageMapping.ImageDto(image.getId(), image.getAccessImgUrl()))
-                            .toList();
-                    return new ImageMapping(post.getId(), images);
-                })
+        List<ImageMapping> imageMappings = posts.stream()
+                .map(post -> new ImageMapping(post.getId(), imageService.getImageDtoList(post.getId())))
                 .toList();
-        return PostResponse.PostsDto.of(pageData, postList.getContent(), postTagMappings, imageMappings);
+
+        return PostResponse.PostsDto.of(pageData, posts.getContent(), postTagMappings, imageMappings);
     }
 
     public PostResponse.PostDto getPost(Long postId){
         Post post = getPostById(postId);
         List<String> tags = tagService.getTags(postId);
-        List<ImageMapping.ImageDto> images = imageService.getImages(post.getId())
-                .stream()
-                .map(image -> new ImageMapping.ImageDto(image.getId(), image.getAccessImgUrl()))
-                .toList();
+        List<ImageMapping.ImageDto> images = imageService.getImageDtoList(postId);
         User user = userService.findById(post.getUser().getId());
         return new PostResponse.PostDto(post, tags, images, user);
     }

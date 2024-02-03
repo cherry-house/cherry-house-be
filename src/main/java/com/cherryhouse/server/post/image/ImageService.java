@@ -56,4 +56,11 @@ public class ImageService {
                     imageRepository.deleteByPostId(postId);
                 });
     }
+
+    public List<ImageMapping.ImageDto> getImageDtoList(Long postId) {
+        return imageRepository.findByPostId(postId)
+                .stream()
+                .map(image -> new ImageMapping.ImageDto(image.getId(), image.getAccessImgUrl()))
+                .toList();
+    }
 }

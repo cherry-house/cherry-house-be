@@ -16,17 +16,17 @@ public class PostResponse {
     ) {
         public static PostsDto of(
                 PageData pageData,
-                List<Post> postList,
-                List<PostTagMapping> postTagMappingList,
-                List<ImageMapping> imageMappingList
+                List<Post> posts,
+                List<PostTagMapping> postTagMappings,
+                List<ImageMapping> imageMappings
         ){
             return new PostsDto(
                     pageData,
-                    postList.stream()
+                    posts.stream()
                             .map(post -> new PostDto(
                                     post,
-                                    PostTagMapping.getTagsByPostId(postTagMappingList, post.getId()),
-                                    ImageMapping.getImgUrlsByPostId(imageMappingList, post.getId())
+                                    PostTagMapping.getTagsByPostId(postTagMappings, post.getId()),
+                                    ImageMapping.getImgUrlsByPostId(imageMappings, post.getId())
                             ))
                             .toList()
             );
@@ -42,7 +42,8 @@ public class PostResponse {
                 String content,
                 List<ImageMapping.ImageDto> images
         ){
-            public PostDto(Post post, List<String> tags, List<ImageMapping.ImageDto> images) { //TODO: 위치 로직 추가
+            //TODO: 위치 로직 추가
+            public PostDto(Post post, List<String> tags, List<ImageMapping.ImageDto> images) {
                 this(
                         post.getId(),
                         post.getTitle(),
@@ -68,7 +69,8 @@ public class PostResponse {
             String content,
             List<ImageMapping.ImageDto> images
     ){
-        public PostDto(Post post, List<String> tags, List<ImageMapping.ImageDto> images, User user) { //TODO: 위치 로직 추가
+        //TODO: 위치 로직 추가
+        public PostDto(Post post, List<String> tags, List<ImageMapping.ImageDto> images, User user) {
             this(
                     post.getId(),
                     post.getTitle(),
