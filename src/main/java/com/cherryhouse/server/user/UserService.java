@@ -1,6 +1,5 @@
 package com.cherryhouse.server.user;
 
-
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server.auth.dto.AuthRequest;

@@ -1,6 +1,5 @@
 package com.cherryhouse.server.image;
 
-
 import com.cherryhouse.server.post.Post;
 import jakarta.persistence.*;
 import lombok.Builder;

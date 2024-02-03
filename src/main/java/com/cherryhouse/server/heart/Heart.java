@@ -21,7 +21,6 @@ public class Heart {
     @JoinColumn(name = "post_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Post post;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 

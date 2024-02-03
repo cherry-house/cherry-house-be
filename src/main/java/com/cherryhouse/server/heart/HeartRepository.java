@@ -8,19 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 public interface HeartRepository extends JpaRepository<Heart, Long> {
-
 
     @Query("select count(h.id) > 0 " +
             "from Heart h " +
             "where h.user.email = :email " +
             "and h.post.id = :postId")
-    boolean existsByUserAndPost(@Param("email") String email, @Param("postId")Long postId);
+    boolean existsByUserAndPost(@Param("email") String email, @Param("postId") Long postId);
 
     @Transactional
     @Modifying
@@ -34,6 +30,4 @@ public interface HeartRepository extends JpaRepository<Heart, Long> {
             "order by h.id " +
             "desc")
     Page<Post> findPostByUserEmail(@Param("email") String email, Pageable pageable);
-
-
 }

@@ -2,7 +2,6 @@ package com.cherryhouse.server.heart;
 
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.Post;
-import com.cherryhouse.server.post.dto.PostResponse;
 import com.cherryhouse.server.posttag.PostTagMapping;
 
 import java.util.List;
@@ -12,9 +11,8 @@ import static com.cherryhouse.server.posttag.PostTagMapping.getTagsByPostId;
 public class HeartResponse {
 
     public record HeartDto(
-
             PageData pageData,
-            List<PostDto> postDtoList
+            List<PostDto> postList
     ){
         public static HeartDto of(PageData pageData,
                                   List<Post> postList,
@@ -48,6 +46,5 @@ public class HeartResponse {
                 );
             }
         }
-
     }
 }

@@ -1,12 +1,10 @@
 package com.cherryhouse.server._core.security;
 
-
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,34 +15,30 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final TokenProvider tokenProvider;
     private final RedisTemplate<String,String> redisTemplate;
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-
-            String token = resolveToken(request);
-
-            if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
-                String isLogout = (String)redisTemplate.opsForValue().get(token);
-                if(ObjectUtils.isEmpty(isLogout)){
-                    Authentication authentication = tokenProvider.getAuthentication(token);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    log.debug("Authentication 정보 : {}", authentication);
-                }
-            } else {
-                log.debug("유효한 JWT 토큰이 없습니다.");
+        String token = resolveToken(request);
+        if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+            String isLogout = redisTemplate.opsForValue().get(token);
+            if (ObjectUtils.isEmpty(isLogout)){
+                Authentication authentication = tokenProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.debug("Authentication 정보 : {}", authentication);
             }
+        } else {
+            log.debug("유효한 JWT 토큰이 없습니다.");
+        }
         chain.doFilter(request, response);
     }
-
 
     //request header에서 토큰 정보를 추출함
     private String resolveToken(HttpServletRequest request){

@@ -1,6 +1,5 @@
 package com.cherryhouse.server.user;
 
-
 import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
