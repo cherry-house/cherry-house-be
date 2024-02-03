@@ -69,8 +69,10 @@ public class PostService {
     public void delete(Long postId, String email){
         validateAuthor(postId, email);
 
-        tagService.delete(postId);
         Post post = getPostById(postId);
+
+        tagService.delete(postId);
+        imageService.delete(postId);
         post.deletePost();
     }
 
