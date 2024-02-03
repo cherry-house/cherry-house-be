@@ -60,6 +60,19 @@ public class HeartService {
         return heartRepository.existsByUserAndPost(user.getEmail(), postId);
     }
 
+    public HeartResponse.HeartDto getHearts(String email, Pageable pageable) {
+
+        User user = userService.findByEmail(email);
+        Page<Post> postList = heartRepository.findPostByUserEmail(email, pageable);
+
+        PageData pageData = PageData.getPageData(postList);
+        List<PostTagMapping> postTagMappings = postList.stream()
+                .map(post -> new PostTagMapping(post.getId(), tagService.getTags(post.getId())))
+                .toList();
+        return HeartResponse.HeartDto.of(pageData, postList.getContent(), postTagMappings);
+    }
+
+
 }
 
 
