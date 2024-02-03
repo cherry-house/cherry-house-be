@@ -2,12 +2,11 @@ package com.cherryhouse.server.post.dto;
 
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.Post;
+import com.cherryhouse.server.post.image.ImageMapping;
 import com.cherryhouse.server.posttag.PostTagMapping;
 import com.cherryhouse.server.user.User;
 
 import java.util.List;
-
-import static com.cherryhouse.server.posttag.PostTagMapping.getTagsByPostId;
 
 public class PostResponse {
 
@@ -18,12 +17,17 @@ public class PostResponse {
         public static PostsDto of(
                 PageData pageData,
                 List<Post> postList,
-                List<PostTagMapping> postTagMappingList
+                List<PostTagMapping> postTagMappingList,
+                List<ImageMapping> imageMappingList
         ){
             return new PostsDto(
                     pageData,
                     postList.stream()
-                            .map(post -> new PostDto(post, getTagsByPostId(postTagMappingList, post.getId())))
+                            .map(post -> new PostDto(
+                                    post,
+                                    PostTagMapping.getTagsByPostId(postTagMappingList, post.getId()),
+                                    ImageMapping.getImgUrlsByPostId(imageMappingList, post.getId())
+                            ))
                             .toList()
             );
         }
@@ -38,7 +42,7 @@ public class PostResponse {
                 String content,
                 List<String> photos
         ){
-            public PostDto(Post post, List<String> tags) { //TODO: 위치, 사진 로직 추가
+            public PostDto(Post post, List<String> tags, List<String> imgUrls) { //TODO: 위치 로직 추가
                 this(
                         post.getId(),
                         post.getTitle(),
@@ -47,7 +51,7 @@ public class PostResponse {
                         null,
                         tags,
                         post.getContent(),
-                        null
+                        imgUrls
                 );
             }
         }

@@ -3,6 +3,7 @@ package com.cherryhouse.server.post;
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.util.PageData;
+import com.cherryhouse.server.post.image.ImageMapping;
 import com.cherryhouse.server.post.image.ImageService;
 import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
@@ -38,7 +39,10 @@ public class PostService {
         List<PostTagMapping> postTagMappings = postList.stream() //post id 마다 tags 를 일급 클래스에 담아서 가지고 오기
                 .map(post -> new PostTagMapping(post.getId(), tagService.getTags(post.getId())))
                 .toList();
-        return PostResponse.PostsDto.of(pageData, postList.getContent(), postTagMappings);
+        List<ImageMapping> imageMappings = postList.stream()
+                .map(post -> new ImageMapping(post.getId(), imageService.getImgUrls(post.getId())))
+                .toList();
+        return PostResponse.PostsDto.of(pageData, postList.getContent(), postTagMappings, imageMappings);
     }
 
     public PostResponse.PostDto getPost(Long postId){
