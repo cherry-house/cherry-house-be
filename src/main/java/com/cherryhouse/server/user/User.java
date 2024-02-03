@@ -30,7 +30,7 @@ public class User {
     @Column
     private String profileImage;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Style> styles;
 
     @Builder
