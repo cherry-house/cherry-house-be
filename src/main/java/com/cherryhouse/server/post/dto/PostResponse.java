@@ -42,7 +42,7 @@ public class PostResponse {
                 String content,
                 List<ImageMapping.ImageDto> images
         ){
-            public PostDto(Post post, List<String> tags, List<ImageMapping.ImageDto> imageList) { //TODO: 위치 로직 추가
+            public PostDto(Post post, List<String> tags, List<ImageMapping.ImageDto> images) { //TODO: 위치 로직 추가
                 this(
                         post.getId(),
                         post.getTitle(),
@@ -51,7 +51,7 @@ public class PostResponse {
                         null,
                         tags,
                         post.getContent(),
-                        imageList
+                        images
                 );
             }
         }
@@ -66,9 +66,9 @@ public class PostResponse {
             Integer distance,
             List<String> tags,
             String content,
-            List<String> images
+            List<ImageMapping.ImageDto> images
     ){
-        public PostDto(Post post, List<String> tags, List<String> imgUrls, User user) { //TODO: 위치 로직 추가
+        public PostDto(Post post, List<String> tags, List<ImageMapping.ImageDto> images, User user) { //TODO: 위치 로직 추가
             this(
                     post.getId(),
                     post.getTitle(),
@@ -78,7 +78,7 @@ public class PostResponse {
                     null,
                     tags,
                     post.getContent(),
-                    imgUrls
+                    images
             );
         }
 
