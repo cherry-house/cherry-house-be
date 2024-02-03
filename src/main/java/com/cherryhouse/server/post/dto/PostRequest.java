@@ -20,8 +20,7 @@ public class PostRequest {
             Category category,
 
             String location,
-            List<String> tags,
-            List<String> photos
+            List<String> tags
     ){}
 
     public record UpdateDto(
@@ -36,7 +35,6 @@ public class PostRequest {
             Category category,
 
             String location,
-            List<String> tags,
-            List<String> photos
+            List<String> tags
     ){}
 }

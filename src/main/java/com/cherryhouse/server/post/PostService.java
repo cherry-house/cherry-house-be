@@ -3,6 +3,7 @@ package com.cherryhouse.server.post;
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.util.PageData;
+import com.cherryhouse.server.post.image.ImageService;
 import com.cherryhouse.server.post.dto.PostRequest;
 import com.cherryhouse.server.post.dto.PostResponse;
 import com.cherryhouse.server.posttag.PostTagMapping;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,14 +30,15 @@ public class PostService {
     private final PostRepository postRepository;
     private final TagService tagService;
     private final UserService userService;
+    private final ImageService imageService;
 
     @Transactional
-    public void create(PostRequest.CreateDto createDto, String email){
+    public void create(PostRequest.CreateDto createDto, List<MultipartFile> photos, String email){
         validateCategory(createDto.category());
 
         User user = userService.findByEmail(email);
 
-        //TODO: 위치, 사진 추가
+        //TODO : 위치 추가
         Post post = Post.builder()
                 .user(user)
                 .title(createDto.title())
@@ -45,6 +48,7 @@ public class PostService {
 
         postRepository.save(post);
         tagService.create(post, createDto.tags());
+        imageService.save(post, photos);
     }
 
     @Transactional
@@ -58,7 +62,7 @@ public class PostService {
         if(!updateDto.tags().isEmpty()){
             tagService.update(post, updateDto.tags());
         }
-        //TODO: 위치, 사진 추가
+        //TODO : 위치, 사진 추가
     }
 
     @Transactional
