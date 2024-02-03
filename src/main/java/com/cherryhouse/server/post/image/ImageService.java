@@ -29,4 +29,12 @@ public class ImageService {
             imageRepository.save(image);
         });
     }
+
+    @Transactional
+    public void delete(Long postId){
+        imageRepository.findByPostId(postId).forEach(image -> {
+            s3Service.delete(image.getImgUrl());
+            imageRepository.deleteByPostId(postId);
+        });
+    }
 }

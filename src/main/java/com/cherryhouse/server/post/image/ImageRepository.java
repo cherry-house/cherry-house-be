@@ -1,5 +1,13 @@
 package com.cherryhouse.server.post.image;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 
-public interface ImageRepository extends JpaRepository<Image, Long> {}
+import java.util.List;
+
+public interface ImageRepository extends JpaRepository<Image, Long> {
+
+    List<Image> findByPostId(@Param("postId") Long postId);
+
+    void deleteByPostId(@Param("postId") Long postId);
+}
