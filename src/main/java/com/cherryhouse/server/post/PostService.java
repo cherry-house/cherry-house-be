@@ -66,7 +66,8 @@ public class PostService {
         validateAuthor(postId, email);
 
         tagService.delete(postId);
-        postRepository.deleteById(postId);
+        Post post = getPostById(postId);
+        post.deletePost();
     }
 
     public PostResponse.PostDto getPost(Long postId){
@@ -85,7 +86,7 @@ public class PostService {
         return PostResponse.PostsDto.of(pageData, postList.getContent(), postTagMappings);
     }
 
-    private Post getPostById(Long postId) {
+    public Post getPostById(Long postId) {
         return postRepository.findById(postId).orElseThrow(() -> new ApiException(ExceptionCode.POST_NOT_FOUND));
     }
 
