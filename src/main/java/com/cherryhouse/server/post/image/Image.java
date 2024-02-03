@@ -1,4 +1,4 @@
-package com.cherryhouse.server.image;
+package com.cherryhouse.server.post.image;
 
 import com.cherryhouse.server.post.Post;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Table(name = "image_tb")
-public class Image{
+public class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,8 @@ public class Image{
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-
     @Builder
-    public Image(Long id, String imgUrl, Post post){
-        this.id = id;
+    public Image(String imgUrl, Post post){
         this.imgUrl = imgUrl;
         this.post = post;
     }

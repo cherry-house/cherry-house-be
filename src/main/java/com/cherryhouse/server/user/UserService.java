@@ -39,9 +39,9 @@ public class UserService {
     @Transactional
     public void uploadStyle(List<MultipartFile> file, String email) {
         User user = findByEmail(email);
-        List<String> fileNames = s3Service.upload(file,"style");
+        List<String> fileNames = s3Service.upload(file, "style");
 
-        fileNames.forEach( filePath ->{
+        fileNames.forEach(filePath -> {
             Style style = Style.builder()
                     .user(user)
                     .imgUrl(filePath)
@@ -53,15 +53,15 @@ public class UserService {
     @Transactional
     public void deleteStyle(String filePath, String email) {
         findByEmail(email);
-        Long id = styleRepository.findByUserEmailAndFileName(email,filePath).orElseThrow(
-                ( )->new ApiException(ExceptionCode.INVALID_REQUEST_DATA,"해당 스타일이 존재하지 않습니다.")
+        Long id = styleRepository.findByUserEmailAndFileName(email, filePath).orElseThrow(
+                () -> new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "해당 스타일이 존재하지 않습니다.")
         );
         s3Service.delete(filePath);
         styleRepository.deleteById(id);
     }
 
     public void existsByEmail(String email){
-        if(userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmail(email)) {
             throw new ApiException(ExceptionCode.USER_EXISTS, "이미 회원가입된 이메일입니다.");
         }
     }
