@@ -54,6 +54,8 @@ public class SecurityConfig {
                authorizeRequests -> authorizeRequests
                        .requestMatchers("/auth/**").permitAll()
                        .requestMatchers("/posts/**").permitAll()
+                       .requestMatchers("/hearts/**").permitAll()
+                       .requestMatchers("/users/**").permitAll()
                        .anyRequest().permitAll()
        );
 
