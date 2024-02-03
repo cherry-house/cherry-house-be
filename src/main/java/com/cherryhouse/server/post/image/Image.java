@@ -17,14 +17,18 @@ public class Image {
     private Long id;
 
     @Column(nullable = false)
-    private String imgUrl;
+    private String saveImgUrl;
+
+    @Column(nullable = false)
+    private String accessImgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
     @Builder
-    public Image(String imgUrl, Post post){
-        this.imgUrl = imgUrl;
+    public Image(String saveImgUrl, String accessImgUrl, Post post){
+        this.saveImgUrl = saveImgUrl;
+        this.accessImgUrl = accessImgUrl;
         this.post = post;
     }
 }

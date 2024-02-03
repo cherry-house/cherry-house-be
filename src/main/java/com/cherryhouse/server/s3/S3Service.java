@@ -67,11 +67,15 @@ public class S3Service {
         try {
             return originalFilename.substring(originalFilename.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
-            throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA,"잘못된 형식의 파일입니다 : "+originalFilename);
+            throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "잘못된 형식의 파일입니다 : " + originalFilename);
         }
     }
 
     public void delete(String fileName){
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket,fileName));
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+    }
+
+    public String getAccessImgUrl(String fileName){
+        return amazonS3.getUrl(bucket, fileName).toString();
     }
 }

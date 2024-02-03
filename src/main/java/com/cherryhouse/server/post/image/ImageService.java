@@ -23,7 +23,8 @@ public class ImageService {
 
         photoUrls.forEach(photoUrl -> {
             Image image = Image.builder()
-                    .imgUrl(photoUrl)
+                    .saveImgUrl(photoUrl)
+                    .accessImgUrl(s3Service.getAccessImgUrl(photoUrl))
                     .post(post)
                     .build();
             imageRepository.save(image);
@@ -33,8 +34,12 @@ public class ImageService {
     @Transactional
     public void delete(Long postId){
         imageRepository.findByPostId(postId).forEach(image -> {
-            s3Service.delete(image.getImgUrl());
+            s3Service.delete(image.getSaveImgUrl());
             imageRepository.deleteByPostId(postId);
         });
+    }
+
+    public List<String> getImgUrls(Long postId){
+        return null;
     }
 }
