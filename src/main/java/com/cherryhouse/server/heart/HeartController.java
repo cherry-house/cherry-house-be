@@ -29,4 +29,12 @@ public class HeartController {
         return ResponseEntity.ok().body(ApiResponse.success(msg));
     }
 
+    @GetMapping
+    public ResponseEntity<?> getHearts(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                       @PageableDefault(size = 6) Pageable pageable){
+        HeartResponse.HeartDto response = heartService.getHearts(userPrincipal.getEmail(), pageable);
+        return ResponseEntity.ok().body(ApiResponse.success(response));
+    }
+
+
 }
