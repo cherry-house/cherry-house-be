@@ -22,9 +22,10 @@ public class ImageService {
         List<String> photoUrls = s3Service.upload(photos,"post");
 
         photoUrls.forEach(photoUrl -> {
+            String accessImgUrl = s3Service.getAccessImgUrl(photoUrl);
             Image image = Image.builder()
                     .saveImgUrl(photoUrl)
-                    .accessImgUrl(s3Service.getAccessImgUrl(photoUrl))
+                    .accessImgUrl(accessImgUrl)
                     .post(post)
                     .build();
             imageRepository.save(image);
@@ -33,13 +34,17 @@ public class ImageService {
 
     @Transactional
     public void delete(Long postId){
-        imageRepository.findByPostId(postId).forEach(image -> {
-            s3Service.delete(image.getSaveImgUrl());
-            imageRepository.deleteByPostId(postId);
-        });
+        imageRepository.findByPostId(postId)
+                .forEach(image -> {
+                    s3Service.delete(image.getSaveImgUrl());
+                    imageRepository.deleteByPostId(postId);
+                });
     }
 
     public List<String> getImgUrls(Long postId){
-        return null;
+        return imageRepository.findByPostId(postId)
+                .stream()
+                .map(Image::getAccessImgUrl)
+                .toList();
     }
 }
