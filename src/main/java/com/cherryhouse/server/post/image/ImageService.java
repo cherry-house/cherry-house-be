@@ -17,19 +17,35 @@ public class ImageService {
     public final S3Service s3Service;
     private final ImageRepository imageRepository;
 
-    @Transactional
-    public void save(Post post, List<MultipartFile> photos){
-        List<String> photoUrls = s3Service.upload(photos,"post");
+    public List<String> getImgUrls(Long postId){
+        return imageRepository.findByPostId(postId)
+                .stream()
+                .map(Image::getAccessImgUrl)
+                .toList();
+    }
 
-        photoUrls.forEach(photoUrl -> {
-            String accessImgUrl = s3Service.getAccessImgUrl(photoUrl);
+    public List<Image> getImages(Long postId){
+        return imageRepository.findByPostId(postId);
+    }
+
+    @Transactional
+    public void save(Post post, List<MultipartFile> images){
+        List<String> imgUrls = s3Service.upload(images,"post");
+
+        imgUrls.forEach(imgUrl -> {
+            String accessImgUrl = s3Service.getAccessImgUrl(imgUrl);
             Image image = Image.builder()
-                    .saveImgUrl(photoUrl)
+                    .saveImgUrl(imgUrl)
                     .accessImgUrl(accessImgUrl)
                     .post(post)
                     .build();
             imageRepository.save(image);
         });
+    }
+
+    @Transactional
+    public void update(Long postId){
+
     }
 
     @Transactional
@@ -39,12 +55,5 @@ public class ImageService {
                     s3Service.delete(image.getSaveImgUrl());
                     imageRepository.deleteByPostId(postId);
                 });
-    }
-
-    public List<String> getImgUrls(Long postId){
-        return imageRepository.findByPostId(postId)
-                .stream()
-                .map(Image::getAccessImgUrl)
-                .toList();
     }
 }

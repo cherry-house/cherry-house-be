@@ -35,12 +35,19 @@ public class PostService {
 
     public PostResponse.PostsDto getPosts(Pageable pageable){
         Page<Post> postList = postRepository.findAllOrderByCreatedDate(pageable);
+
         PageData pageData = getPageData(postList);
         List<PostTagMapping> postTagMappings = postList.stream() //post id 마다 tags 를 일급 클래스에 담아서 가지고 오기
                 .map(post -> new PostTagMapping(post.getId(), tagService.getTags(post.getId())))
                 .toList();
         List<ImageMapping> imageMappings = postList.stream()
-                .map(post -> new ImageMapping(post.getId(), imageService.getImgUrls(post.getId())))
+                .map(post -> {
+                    List<ImageMapping.ImageDto> images = imageService.getImages(post.getId())
+                            .stream()
+                            .map(image -> new ImageMapping.ImageDto(image.getId(), image.getAccessImgUrl()))
+                            .toList();
+                    return new ImageMapping(post.getId(), images);
+                })
                 .toList();
         return PostResponse.PostsDto.of(pageData, postList.getContent(), postTagMappings, imageMappings);
     }
@@ -54,7 +61,7 @@ public class PostService {
     }
 
     @Transactional
-    public void create(PostRequest.CreateDto createDto, List<MultipartFile> photos, String email){
+    public void create(PostRequest.CreateDto createDto, List<MultipartFile> images, String email){
         validateCategory(createDto.category());
 
         User user = userService.findByEmail(email);
@@ -69,11 +76,11 @@ public class PostService {
 
         postRepository.save(post);
         tagService.create(post, createDto.tags());
-        imageService.save(post, photos);
+        imageService.save(post, images);
     }
 
     @Transactional
-    public void update(Long postId, PostRequest.UpdateDto updateDto, String email){
+    public void update(Long postId, PostRequest.UpdateDto updateDto, List<MultipartFile> images, String email){
         validateAuthor(postId, email);
         validateCategory(updateDto.category());
 
@@ -83,7 +90,7 @@ public class PostService {
         if (!updateDto.tags().isEmpty()){
             tagService.update(post, updateDto.tags());
         }
-        //TODO : 위치, 사진 추가
+        //TODO : 위치 추가
     }
 
     @Transactional

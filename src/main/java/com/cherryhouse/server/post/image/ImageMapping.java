@@ -10,13 +10,18 @@ import java.util.List;
 public class ImageMapping {
 
     private Long postId;
-    private List<String> imgUrls;
+    private List<ImageDto> images;
 
-    public static List<String> getImgUrlsByPostId(List<ImageMapping> imageMappingList, Long postId){
+    public record ImageDto (
+            Long id,
+            String url
+    ){}
+
+    public static List<ImageDto> getImgUrlsByPostId(List<ImageMapping> imageMappingList, Long postId){
         return imageMappingList.stream()
-                .filter(postTagMapping -> postTagMapping.getPostId().equals(postId))
+                .filter(imageMapping -> imageMapping.getPostId().equals(postId))
                 .findFirst()
-                .map(ImageMapping::getImgUrls)
+                .map(ImageMapping::getImages)
                 .orElseThrow();
     }
 }
