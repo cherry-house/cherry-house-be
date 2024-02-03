@@ -23,8 +23,7 @@ public class Style{
     private User user;
 
     @Builder
-    public Style(Long id, String imgUrl, User user){
-        this.id = id;
+    public Style(String imgUrl, User user){
         this.imgUrl = imgUrl;
         this.user = user;
     }
