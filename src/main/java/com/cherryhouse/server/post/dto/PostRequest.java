@@ -35,6 +35,7 @@ public class PostRequest {
             Category category,
 
             String location,
-            List<String> tags
+            List<String> tags,
+            List<Long> deletedImg
     ){}
 }

@@ -71,7 +71,7 @@ public class PostService {
 
         postRepository.save(post);
         tagService.create(post, createDto.tags());
-        imageService.save(post, images);
+        imageService.create(post, images);
     }
 
     @Transactional
@@ -85,6 +85,7 @@ public class PostService {
         if (!updateDto.tags().isEmpty()){
             tagService.update(post, updateDto.tags());
         }
+        imageService.update(post, images, updateDto.deletedImg());
         //TODO : 위치 추가
     }
 
