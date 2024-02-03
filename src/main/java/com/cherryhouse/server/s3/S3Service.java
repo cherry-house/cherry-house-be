@@ -32,27 +32,27 @@ public class S3Service {
     public List<String> upload(List<MultipartFile> multipartFiles, String folderName){
         List<String> fileNameList = new ArrayList<>();
 
-        log.info("filenamelist : {}",fileNameList);
+        log.info("filenamelist : {}", fileNameList);
 
         multipartFiles.forEach(file -> {
 
             //경로 지정
-            String objectKey = createFilePathName(file.getOriginalFilename(),folderName);
+            String objectKey = createFilePathName(file.getOriginalFilename(), folderName);
 
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentLength(file.getSize());
             objectMetadata.setContentType(file.getContentType());
 
             try(InputStream inputStream = file.getInputStream()){
-                amazonS3.putObject(new PutObjectRequest(bucket,objectKey,inputStream,objectMetadata)
+                amazonS3.putObject(new PutObjectRequest(bucket, objectKey, inputStream, objectMetadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead));
             }catch (IOException e){
-                throw new ApiException(ExceptionCode.INTERNAL_SERVER_ERROR,"이미지 업로드에 실패했습니다.");
+                throw new ApiException(ExceptionCode.INTERNAL_SERVER_ERROR, "이미지 업로드에 실패했습니다.");
             }
             fileNameList.add(objectKey);
-            log.info("original file name : {}",objectKey);
+            log.info("original file name : {}", objectKey);
         });
-        log.info("filenamelist : {}",fileNameList);
+        log.info("filenamelist : {}", fileNameList);
         return fileNameList;
     }
 
@@ -66,11 +66,15 @@ public class S3Service {
         try {
             return originalFilename.substring(originalFilename.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
-            throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA,"잘못된 형식의 파일입니다 : "+originalFilename);
+            throw new ApiException(ExceptionCode.INVALID_REQUEST_DATA, "잘못된 형식의 파일입니다 : " + originalFilename);
         }
     }
 
     public void delete(String fileName){
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket,fileName));
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+    }
+
+    public String getAccessImgUrl(String fileName){
+        return amazonS3.getUrl(bucket, fileName).toString();
     }
 }
