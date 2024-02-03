@@ -32,6 +32,23 @@ public class PostService {
     private final UserService userService;
     private final ImageService imageService;
 
+    public PostResponse.PostsDto getPosts(Pageable pageable){
+        Page<Post> postList = postRepository.findAllOrderByCreatedDate(pageable);
+        PageData pageData = getPageData(postList);
+        List<PostTagMapping> postTagMappings = postList.stream() //post id 마다 tags 를 일급 클래스에 담아서 가지고 오기
+                .map(post -> new PostTagMapping(post.getId(), tagService.getTags(post.getId())))
+                .toList();
+        return PostResponse.PostsDto.of(pageData, postList.getContent(), postTagMappings);
+    }
+
+    public PostResponse.PostDto getPost(Long postId){
+        Post post = getPostById(postId);
+        List<String> tags = tagService.getTags(postId);
+        List<String> imgUrls = imageService.getImgUrls(postId);
+        User user = userService.findById(post.getUser().getId());
+        return new PostResponse.PostDto(post, tags, imgUrls, user);
+    }
+
     @Transactional
     public void create(PostRequest.CreateDto createDto, List<MultipartFile> photos, String email){
         validateCategory(createDto.category());
@@ -59,7 +76,7 @@ public class PostService {
         Post post = getPostById(postId);
 
         post.update(updateDto.title(), updateDto.content(), updateDto.category());
-        if(!updateDto.tags().isEmpty()){
+        if (!updateDto.tags().isEmpty()){
             tagService.update(post, updateDto.tags());
         }
         //TODO : 위치, 사진 추가
@@ -74,22 +91,6 @@ public class PostService {
         tagService.delete(postId);
         imageService.delete(postId);
         post.deletePost();
-    }
-
-    public PostResponse.PostDto getPost(Long postId){
-        Post post = getPostById(postId);
-        User user = userService.findById(post.getUser().getId());
-        List<String> tags = tagService.getTags(postId);
-        return new PostResponse.PostDto(post, tags, user);
-    }
-
-    public PostResponse.PostsDto getPosts(Pageable pageable){
-        Page<Post> postList = postRepository.findAllOrderByCreatedDate(pageable);
-        PageData pageData = getPageData(postList);
-        List<PostTagMapping> postTagMappings = postList.stream() //post id 마다 tags 를 일급 클래스에 담아서 가지고 오기
-                .map(post -> new PostTagMapping(post.getId(), tagService.getTags(post.getId())))
-                .toList();
-        return PostResponse.PostsDto.of(pageData, postList.getContent(), postTagMappings);
     }
 
     public Post getPostById(Long postId) {
