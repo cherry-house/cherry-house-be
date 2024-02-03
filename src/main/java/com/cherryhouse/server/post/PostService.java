@@ -3,6 +3,7 @@ package com.cherryhouse.server.post;
 import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.util.PageData;
+import com.cherryhouse.server.post.image.Image;
 import com.cherryhouse.server.post.image.ImageMapping;
 import com.cherryhouse.server.post.image.ImageService;
 import com.cherryhouse.server.post.dto.PostRequest;
@@ -55,9 +56,12 @@ public class PostService {
     public PostResponse.PostDto getPost(Long postId){
         Post post = getPostById(postId);
         List<String> tags = tagService.getTags(postId);
-        List<String> imgUrls = imageService.getImgUrls(postId);
+        List<ImageMapping.ImageDto> images = imageService.getImages(post.getId())
+                .stream()
+                .map(image -> new ImageMapping.ImageDto(image.getId(), image.getAccessImgUrl()))
+                .toList();
         User user = userService.findById(post.getUser().getId());
-        return new PostResponse.PostDto(post, tags, imgUrls, user);
+        return new PostResponse.PostDto(post, tags, images, user);
     }
 
     @Transactional
