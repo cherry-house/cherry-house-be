@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -37,6 +38,9 @@ public class Post {
     private String createdDate;
     private String updatedDate;
 
+    @ColumnDefault("false")
+    private boolean deleted;
+
     @Builder
     public Post(String title, User user, String content, Category category,
                 String storeLocationX, String storeLocationY) {
@@ -54,5 +58,11 @@ public class Post {
         this.content = content;
         this.category = category;
         this.updatedDate = String.valueOf(LocalDateTime.now());
+    }
+
+    public void deletePost(){
+        this.deleted = true;
+        this.title = "삭제된 게시글입니다";
+        this.content = "삭제된 게시글입니다.";
     }
 }

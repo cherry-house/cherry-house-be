@@ -6,9 +6,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+@Primary
 @Component
 @RequiredArgsConstructor
-@Primary
 public class GmailSender implements MailSender {
 
     private final JavaMailSender javaMailSender;

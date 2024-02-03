@@ -9,8 +9,9 @@ public enum Category {
     ETC;
 
     @JsonCreator
-    public static Category from(String s){ //enum을 request로 받기 위해서 역직렬화 구현
-        if(isEmpty(s)) return null;
+    public static Category from(String s){
+        //enum 을 request 로 받기 위해서 역직렬화 구현
+        if (isEmpty(s)) return null;
         return Category.valueOf(s.toUpperCase());
     }
 
