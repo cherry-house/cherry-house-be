@@ -38,16 +38,17 @@ public class PostController {
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                     @RequestPart @Valid PostRequest.CreateDto request, Errors errors,
-                                    @RequestPart("photos") List<MultipartFile> photos){
-        postService.create(request, photos, userPrincipal.getEmail());
+                                    @RequestPart("photos") List<MultipartFile> images){
+        postService.create(request, images, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @PutMapping("/{postId}")
     public ResponseEntity<?> update(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                     @PathVariable(name = "postId") Long postId,
-                                    @RequestPart @Valid PostRequest.UpdateDto request, Errors errors){
-        postService.update(postId, request, userPrincipal.getEmail());
+                                    @RequestPart @Valid PostRequest.UpdateDto request, Errors errors,
+                                    @RequestPart("photos") List<MultipartFile> images){
+        postService.update(postId, request, images, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
