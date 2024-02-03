@@ -38,7 +38,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                     @RequestPart @Valid PostRequest.CreateDto request, Errors errors,
-                                    @RequestPart("photos") List<MultipartFile> images){
+                                    @RequestPart("images") List<MultipartFile> images){
         postService.create(request, images, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
@@ -47,7 +47,7 @@ public class PostController {
     public ResponseEntity<?> update(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                     @PathVariable(name = "postId") Long postId,
                                     @RequestPart @Valid PostRequest.UpdateDto request, Errors errors,
-                                    @RequestPart("photos") List<MultipartFile> images){
+                                    @RequestPart("images") List<MultipartFile> images){
         postService.update(postId, request, images, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }

@@ -16,6 +16,7 @@ public enum ExceptionCode {
     FAIL_TO_LOGOUT(HttpStatus.BAD_REQUEST,"로그아웃에 실패했습니다."),
 
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게시글을 찾을 수 없습니다."),
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이미지를 찾을 수 없습니다."),
 
     INVALID_REQUEST_DATA(HttpStatus.BAD_REQUEST, "입력이 잘못되었습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부에서 오류가 발생했습니다.");
