@@ -28,4 +28,11 @@ public class ChatRoomController {
         chatRoomService.create(userPrincipal.getEmail(), postId);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
+
+    @GetMapping("/{chatRoomId}")
+    public ResponseEntity<?> getChats(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                      @PathVariable("chatRoomId") Long chatRoomId, Pageable pageable){
+        ChatRoomResponse.ChatsDto response = chatRoomService.getChats(pageable, chatRoomId);
+        return ResponseEntity.ok().body(ApiResponse.success(response));
+    }
 }

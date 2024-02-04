@@ -1,6 +1,7 @@
 package com.cherryhouse.server.chatroom.dto;
 
 import com.cherryhouse.server._core.util.PageData;
+import com.cherryhouse.server.chat.Chat;
 import com.cherryhouse.server.chatroom.ChatRoom;
 import com.cherryhouse.server.user.User;
 
@@ -35,6 +36,33 @@ public class ChatRoomResponse {
                         chatRoom.getId(),
                         user.getName(),
                         user.getProfileImage(),
+                        null
+                );
+            }
+        }
+    }
+
+    public record ChatsDto(
+            PageData page,
+            List<ChatDto> chatList
+    ){
+        public static ChatsDto of(
+                PageData pageData,
+                List<Chat> chatList
+        ){
+            return new ChatsDto(
+                    pageData,
+                    chatList.stream()
+                            .map(chatRoom -> new ChatDto())
+                            .toList()
+            );
+        }
+
+        public record ChatDto (
+                Long id
+        ){
+            public ChatDto() {
+                this(
                         null
                 );
             }
