@@ -9,19 +9,31 @@ import java.util.List;
 @AllArgsConstructor
 public class ImageMapping {
 
-    private Long postId;
-    private List<ImageDto> images;
+    //일급 클래스에 담아서 반환하기
 
     public record ImageDto (
             Long id,
             String url
+    ){
+        public ImageDto(Image image) {
+            this(
+                    image.getId(),
+                    image.getAccessImgUrl()
+            );
+        }
+    }
+
+    public record UrlDto (
+            Long postId,
+            String url
     ){}
 
-    public static List<ImageDto> getImgUrlsByPostId(List<ImageMapping> imageMappingList, Long postId){
-        return imageMappingList.stream()
-                .filter(imageMapping -> imageMapping.getPostId().equals(postId))
+    //response 에서 사용하는 메소드로 response dto 형태로 변환
+    public static String getUrlByPostId(List<ImageMapping.UrlDto> urlDtoList, Long postId){
+        return urlDtoList.stream()
+                .filter(imagesDto -> imagesDto.postId.equals(postId))
                 .findFirst()
-                .map(ImageMapping::getImages)
-                .orElseThrow();
+                .orElseThrow()
+                .url;
     }
 }

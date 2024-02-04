@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -25,10 +27,13 @@ public class Image {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
+    private String createdDate;
+
     @Builder
     public Image(String saveImgUrl, String accessImgUrl, Post post){
         this.saveImgUrl = saveImgUrl;
         this.accessImgUrl = accessImgUrl;
         this.post = post;
+        this.createdDate = String.valueOf(LocalDateTime.now());
     }
 }

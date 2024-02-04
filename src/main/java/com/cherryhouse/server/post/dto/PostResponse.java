@@ -11,22 +11,22 @@ import java.util.List;
 public class PostResponse {
 
     public record PostsDto(
-            PageData pageData,
+            PageData page,
             List<PostDto> postList
     ) {
         public static PostsDto of(
                 PageData pageData,
-                List<Post> posts,
-                List<PostTagMapping> postTagMappings,
-                List<ImageMapping> imageMappings
+                List<Post> postList,
+                List<PostTagMapping.TagsDto> tagsDtoList,
+                List<ImageMapping.UrlDto> urlDtoList
         ){
             return new PostsDto(
                     pageData,
-                    posts.stream()
+                    postList.stream()
                             .map(post -> new PostDto(
                                     post,
-                                    PostTagMapping.getTagsByPostId(postTagMappings, post.getId()),
-                                    ImageMapping.getImgUrlsByPostId(imageMappings, post.getId())
+                                    PostTagMapping.getTagsByPostId(tagsDtoList, post.getId()),
+                                    ImageMapping.getUrlByPostId(urlDtoList, post.getId())
                             ))
                             .toList()
             );
@@ -40,10 +40,10 @@ public class PostResponse {
                 Integer distance,
                 List<String> tags,
                 String content,
-                List<ImageMapping.ImageDto> images
+                String image
         ){
             //TODO: 위치 로직 추가
-            public PostDto(Post post, List<String> tags, List<ImageMapping.ImageDto> images) {
+            public PostDto(Post post, List<String> tags, String image) {
                 this(
                         post.getId(),
                         post.getTitle(),
@@ -52,7 +52,7 @@ public class PostResponse {
                         null,
                         tags,
                         post.getContent(),
-                        images
+                        image
                 );
             }
         }

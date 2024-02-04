@@ -4,7 +4,6 @@ import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.util.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +24,7 @@ public class HeartController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getHearts(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                       @PageableDefault(size = 6) Pageable pageable){
+    public ResponseEntity<?> getHearts(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable){
         HeartResponse.HeartDto response = heartService.getHearts(userPrincipal.getEmail(), pageable);
         return ResponseEntity.ok().body(ApiResponse.success(response));
     }

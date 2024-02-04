@@ -34,24 +34,22 @@ public class PostService {
     private final ImageService imageService;
 
     public PostResponse.PostsDto getPosts(Pageable pageable){
-        Page<Post> posts = postRepository.findAllOrderByCreatedDate(pageable);
+        Page<Post> postList = postRepository.findAllOrderByCreatedDate(pageable);
 
-        PageData pageData = getPageData(posts);
-        List<PostTagMapping> postTagMappings = posts.stream() //post id 마다 tags 를 일급 클래스에 담아서 가지고 오기
-                .map(post -> new PostTagMapping(post.getId(), tagService.getTags(post.getId())))
-                .toList();
-        List<ImageMapping> imageMappings = posts.stream()
-                .map(post -> new ImageMapping(post.getId(), imageService.getImageDtoList(post.getId())))
-                .toList();
+        PageData pageData = getPageData(postList);
+        List<PostTagMapping.TagsDto> tagsDtoList = tagService.getTagsDtoList(postList.getContent());
+        List<ImageMapping.UrlDto> urlDtoList = imageService.getUrlDtoList(postList.getContent());
 
-        return PostResponse.PostsDto.of(pageData, posts.getContent(), postTagMappings, imageMappings);
+        return PostResponse.PostsDto.of(pageData, postList.getContent(), tagsDtoList, urlDtoList);
     }
 
     public PostResponse.PostDto getPost(Long postId){
         Post post = getPostById(postId);
-        List<String> tags = tagService.getTags(postId);
+
+        List<String> tags = tagService.getTagsDto(post).tags();
         List<ImageMapping.ImageDto> images = imageService.getImageDtoList(postId);
         User user = userService.findById(post.getUser().getId());
+
         return new PostResponse.PostDto(post, tags, images, user);
     }
 
@@ -82,9 +80,7 @@ public class PostService {
         Post post = getPostById(postId);
 
         post.update(updateDto.title(), updateDto.content(), updateDto.category());
-        if (!updateDto.tags().isEmpty()){
-            tagService.update(post, updateDto.tags());
-        }
+        tagService.update(post, updateDto.tags());
         imageService.update(post, images, updateDto.deletedImg());
         //TODO : 위치 추가
     }
@@ -96,7 +92,7 @@ public class PostService {
         Post post = getPostById(postId);
 
         tagService.delete(postId);
-        imageService.delete(postId);
+        imageService.deleteAllByPostId(postId);
         post.deletePost();
     }
 

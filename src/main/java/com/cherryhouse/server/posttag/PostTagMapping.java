@@ -9,14 +9,19 @@ import java.util.List;
 @AllArgsConstructor
 public class PostTagMapping {
 
-    private Long postId;
-    private List<String> tags;
+    //일급 클래스에 담아서 반환하기
 
-    public static List<String> getTagsByPostId(List<PostTagMapping> postTagMappingList, Long postId){
-        return postTagMappingList.stream()
-                .filter(postTagMapping -> postTagMapping.getPostId().equals(postId))
+    public record TagsDto (
+            Long postId,
+            List<String> tags
+    ){}
+
+    //response 에서 사용하는 메소드로 response dto 형태로 변환
+    public static List<String> getTagsByPostId(List<PostTagMapping.TagsDto> tagsDtoList, Long postId){
+        return tagsDtoList.stream()
+                .filter(tagsDto -> tagsDto.postId.equals(postId))
                 .findFirst()
-                .map(PostTagMapping::getTags)
+                .map(TagsDto::tags)
                 .orElseThrow();
     }
 }
