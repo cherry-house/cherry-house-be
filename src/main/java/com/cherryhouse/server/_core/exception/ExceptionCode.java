@@ -29,6 +29,7 @@ public enum ExceptionCode {
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 게시글을 찾을 수 없습니다."),
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이미지를 찾을 수 없습니다."),
 
+    CHATROOM_EXISTS(HttpStatus.BAD_REQUEST, "이미 생성된 채팅방입니다."),
     // server ------------------
 
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부에서 오류가 발생했습니다."),

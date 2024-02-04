@@ -23,7 +23,7 @@ public class ChatRoom {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private User user; //신청자
 
     private String createdDate;
 

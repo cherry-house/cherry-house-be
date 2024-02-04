@@ -1,5 +1,9 @@
 package com.cherryhouse.server.chatroom;
 
+import com.cherryhouse.server._core.exception.ApiException;
+import com.cherryhouse.server._core.exception.ExceptionCode;
+import com.cherryhouse.server._core.util.PageData;
+import com.cherryhouse.server.chatroom.dto.ChatRoomResponse;
 import com.cherryhouse.server.post.Post;
 import com.cherryhouse.server.post.PostService;
 import com.cherryhouse.server.user.User;
@@ -10,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.cherryhouse.server._core.util.PageData.getPageData;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -19,13 +25,16 @@ public class ChatRoomService {
     private final UserService userService;
     private final ChatRoomRepository chatRoomRepository;
 
-    public void getChatRooms(Pageable pageable, Long userId){
-        Page<Post> posts = chatRoomRepository.findAllOrderByCreatedDate(pageable, userId);
-
+    public ChatRoomResponse.ChatRoomsDto getChatRooms(Pageable pageable, String email){
+        Page<ChatRoom> chatRoomList= chatRoomRepository.findAllOrderByCreatedDate(pageable, email);
+        PageData pageData = getPageData(chatRoomList);
+        return ChatRoomResponse.ChatRoomsDto.of(pageData, chatRoomList.getContent());
     }
 
     @Transactional
     public void create(String email, Long postId){
+        validateChatRoom(email, postId);
+
         Post post = postService.getPostById(postId);
         User user = userService.findByEmail(email);
 
@@ -34,5 +43,11 @@ public class ChatRoomService {
                 .user(user)
                 .build();
         chatRoomRepository.save(chatRoom);
+    }
+
+    private void validateChatRoom(String email, Long postId) {
+        if (chatRoomRepository.existsByPostIdAndUserEmail(postId, email)) {
+            throw new ApiException(ExceptionCode.CHATROOM_EXISTS);
+        }
     }
 }
