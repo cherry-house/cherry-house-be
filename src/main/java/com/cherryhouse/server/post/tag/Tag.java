@@ -1,4 +1,4 @@
-package com.cherryhouse.server.tag;
+package com.cherryhouse.server.post.tag;
 
 import jakarta.persistence.*;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.cherryhouse.server.posttag;
+package com.cherryhouse.server.post.posttag;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package com.cherryhouse.server.posttag;
+package com.cherryhouse.server.post.posttag;
 
 import com.cherryhouse.server.post.Post;
-import com.cherryhouse.server.tag.Tag;
+import com.cherryhouse.server.post.tag.Tag;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

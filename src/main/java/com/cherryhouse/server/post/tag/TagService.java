@@ -1,9 +1,9 @@
-package com.cherryhouse.server.tag;
+package com.cherryhouse.server.post.tag;
 
 import com.cherryhouse.server.post.Post;
-import com.cherryhouse.server.posttag.PostTag;
-import com.cherryhouse.server.posttag.PostTagMapping;
-import com.cherryhouse.server.posttag.PostTagRepository;
+import com.cherryhouse.server.post.posttag.PostTag;
+import com.cherryhouse.server.post.posttag.PostTagMapping;
+import com.cherryhouse.server.post.posttag.PostTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

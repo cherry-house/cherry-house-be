@@ -3,7 +3,7 @@ package com.cherryhouse.server.heart;
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.Post;
 import com.cherryhouse.server.post.image.ImageMapping;
-import com.cherryhouse.server.posttag.PostTagMapping;
+import com.cherryhouse.server.post.posttag.PostTagMapping;
 
 import java.util.List;
 
