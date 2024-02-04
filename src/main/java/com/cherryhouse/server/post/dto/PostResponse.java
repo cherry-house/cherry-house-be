@@ -39,7 +39,6 @@ public class PostResponse {
                 String address,
                 Integer distance,
                 List<String> tags,
-                String content,
                 String image
         ){
             //TODO: 위치 로직 추가
@@ -51,7 +50,6 @@ public class PostResponse {
                         null,
                         null,
                         tags,
-                        post.getContent(),
                         image
                 );
             }
