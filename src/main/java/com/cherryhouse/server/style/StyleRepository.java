@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface StyleRepository extends JpaRepository<Style, Long> {
@@ -12,4 +13,10 @@ public interface StyleRepository extends JpaRepository<Style, Long> {
             "where s.user.email = :email " +
             "and s.imgUrl = :filePath")
     Optional<Long> findByUserEmailAndFileName(@Param("email") String email, @Param("filePath") String filePath);
+
+    @Query("select s from Style s " +
+            "where s.user.id = :id " +
+            "order by s.id " +
+            "desc")
+    List<Style> findByUserId(@Param("id") Long id);
 }
