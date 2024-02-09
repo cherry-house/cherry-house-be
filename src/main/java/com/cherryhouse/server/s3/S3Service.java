@@ -32,28 +32,29 @@ public class S3Service {
     public List<String> upload(List<MultipartFile> multipartFiles, String folderName){
         List<String> fileNameList = new ArrayList<>();
 
-        log.info("filenamelist : {}",fileNameList);
-
         multipartFiles.forEach(file -> {
-
-            //경로 지정
-            String objectKey = createFilePathName(file.getOriginalFilename(),folderName);
-
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentLength(file.getSize());
-            objectMetadata.setContentType(file.getContentType());
-
-            try(InputStream inputStream = file.getInputStream()){
-                amazonS3.putObject(new PutObjectRequest(bucket,objectKey,inputStream,objectMetadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
-            }catch (IOException e){
-                throw new ApiException(ExceptionCode.INTERNAL_SERVER_ERROR,"이미지 업로드에 실패했습니다.");
-            }
+            String objectKey = uploadS3(file,folderName);
             fileNameList.add(objectKey);
-            log.info("original file name : {}",objectKey);
         });
-        log.info("filenamelist : {}",fileNameList);
         return fileNameList;
+    }
+
+    public String uploadOne(MultipartFile file, String folderName){
+        return uploadS3(file,folderName);
+    }
+
+    private String uploadS3(MultipartFile file, String folderName){
+        String objectKey = createFilePathName(file.getOriginalFilename(),folderName);
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(file.getSize());
+        objectMetadata.setContentType(file.getContentType());
+        try(InputStream inputStream = file.getInputStream()){
+            amazonS3.putObject(new PutObjectRequest(bucket,objectKey,inputStream,objectMetadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+        }catch (IOException e){
+            throw new ApiException(ExceptionCode.INTERNAL_SERVER_ERROR,"이미지 업로드에 실패했습니다.");
+        }
+        return objectKey;
     }
 
     private String createFilePathName(String originalFilename, String folderName){
