@@ -35,7 +35,6 @@ public class AuthService {
     @Transactional
     public void join(AuthRequest.JoinDto joinDto){
         userService.existsByEmail(joinDto.email());
-
         User user = userService.save(joinDto);
         UserPrincipal.create(user);
     }
