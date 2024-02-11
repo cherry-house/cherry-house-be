@@ -16,23 +16,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ChatService {
 
-    private final ChatRoomService chatRoomService;
+    //private final ChatRoomService chatRoomService;
     private final UserService userService;
     private final ChatRepository chatRepository;
 
     public Page<Chat> getChats(Pageable pageable, Long chatRoomId){
-        return chatRepository.findAllOrderByCreatedDate(pageable, chatRoomId);
+        return chatRepository.findAllOrderByCreatedDate(pageable);
     }
 
     @Transactional
     public void create(ChatRequest.CreateDto createDto, Long chatRoomId, String email){
-        ChatRoom chatRoom = chatRoomService.getChatRoom(chatRoomId);
+        //ChatRoom chatRoom = chatRoomService.getChatRoom(chatRoomId);
         User user = userService.findByEmail(email);
 
         Chat chat = Chat.builder()
                 .content(createDto.content())
-                .chatRoom(chatRoom)
-                .user(user)
+                //.chatRoom(chatRoom)
+                .sender(user)
                 .type(createDto.type())
                 .build();
 

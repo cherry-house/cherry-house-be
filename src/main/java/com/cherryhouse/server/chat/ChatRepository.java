@@ -9,8 +9,8 @@ import org.springframework.data.repository.query.Param;
 public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     @Query("select c from Chat c " +
-            "where c.user.email = :email " +
+            "where c.sender.email = :email " +
             "order by c.createdDate " +
             "desc")
-    Page<Chat> findAllOrderByCreatedDate(Pageable pageable, @Param("chatRoomId") Long chatRoomId);
+    Page<Chat> findAllOrderByCreatedDate(Pageable pageable);
 }
