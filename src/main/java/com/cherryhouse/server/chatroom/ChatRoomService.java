@@ -48,11 +48,12 @@ public class ChatRoomService {
         chatRoomRepository.save(chatRoom);
     }
 
-    public ChatRoomResponse.ChatsDto getChats(Pageable pageable, Long chatRoomId){
+    public ChatRoomResponse.ChatsDto getChats(Pageable pageable, Long chatRoomId, String email){
         //TODO: 읽음 처리
         Page<Chat> chatList = chatService.getChats(pageable, chatRoomId);
         PageData pageData = getPageData(chatList);
-        return ChatRoomResponse.ChatsDto.of(pageData, chatList.getContent());
+        User user = userService.findByEmail(email);
+        return ChatRoomResponse.ChatsDto.of(pageData, user, chatList.getContent());
     }
 
     public ChatRoom getChatRoom(Long chatRoomId){

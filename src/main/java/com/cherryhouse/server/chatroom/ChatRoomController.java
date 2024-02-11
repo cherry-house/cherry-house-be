@@ -32,7 +32,7 @@ public class ChatRoomController {
     @GetMapping("/{chatRoomId}")
     public ResponseEntity<?> getChats(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                       @PathVariable("chatRoomId") Long chatRoomId, Pageable pageable){
-        ChatRoomResponse.ChatsDto response = chatRoomService.getChats(pageable, chatRoomId);
+        ChatRoomResponse.ChatsDto response = chatRoomService.getChats(pageable, chatRoomId, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success(response));
     }
 }
