@@ -44,26 +44,50 @@ public class ChatRoomResponse {
 
     public record ChatsDto(
             PageData page,
+            UserDto user,
             List<ChatDto> chatList
     ){
         public static ChatsDto of(
                 PageData pageData,
+                User user,
                 List<Chat> chatList
         ){
             return new ChatsDto(
                     pageData,
+                    new UserDto(user),
                     chatList.stream()
-                            .map(chatRoom -> new ChatDto())
+                            .map(ChatDto::new)
                             .toList()
             );
         }
 
         public record ChatDto (
-                Long id
+                Long id,
+                String content,
+                String timestamp,
+                Boolean isReceived,
+                Boolean isRead
+
         ){
-            public ChatDto() {
+            public ChatDto(Chat chat) {
                 this(
+                        chat.getId(),
+                        chat.getContent(),
+                        chat.getCreatedDate(),
+                        null,
                         null
+                );
+            }
+        }
+
+        public record UserDto (
+                String name,
+                String image
+        ){
+            public UserDto(User user) {
+                this(
+                        user.getName(),
+                        user.getProfileImage()
                 );
             }
         }
