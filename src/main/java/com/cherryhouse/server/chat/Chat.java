@@ -26,7 +26,7 @@ public class Chat {
     private ChatRoom chatRoom;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user; //보낸 유저
+    private User sender;
 
     @ColumnDefault("false")
     private Boolean isRead;
@@ -35,10 +35,10 @@ public class Chat {
     private String createdDate;
 
     @Builder
-    public Chat(String content, ChatRoom chatRoom, User user, String type) {
+    public Chat(String content, ChatRoom chatRoom, User sender, String type) {
         this.content = content;
         this.chatRoom = chatRoom;
-        this.user = user;
+        this.sender = sender;
         this.type = type;
         this.createdDate = String.valueOf(LocalDateTime.now());
     }
