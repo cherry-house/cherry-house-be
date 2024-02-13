@@ -19,4 +19,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "where p.user.email = :email " +
             "and p.id = :id")
     Optional<Post> findByIdAndUserEmail(@Param("id")Long id, @Param("email")String email);
+
+    @Query("select p from Post p " +
+            "where p.user.email = :email " +
+            "order by p.createdDate " +
+            "desc")
+    Page<Post> findByUserEmail(@Param("email")String email, Pageable pageable);
 }
