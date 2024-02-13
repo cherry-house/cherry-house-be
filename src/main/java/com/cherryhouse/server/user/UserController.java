@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Pageable;
@@ -21,14 +22,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getUserInfo(@PathVariable("userId") Long userId, @PageableDefault(size = 6) Pageable pageable){
+    public ResponseEntity<?> getUserInfo(@PathVariable("userId") Long userId, @PageableDefault Pageable pageable){
         UserResponse.UserDto response = userService.getUserInfo(userId, pageable);
         return ResponseEntity.ok().body(ApiResponse.success(response));
     }
 
     @PutMapping("/info")
     public ResponseEntity<?> updateInfo(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                        @RequestBody UserRequest.UpdateInfoDto updateInfoDto){
+                                        @RequestBody UserRequest.UpdateInfoDto updateInfoDto, Errors errors){
         userService.updateInfo(userPrincipal.getEmail(), updateInfoDto);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
@@ -42,7 +43,7 @@ public class UserController {
 
     @PutMapping("/password")
     public ResponseEntity<?> updatePwd(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                       @RequestBody UserRequest.UpdatePwdDto updatePwdDto){
+                                       @RequestBody UserRequest.UpdatePwdDto updatePwdDto, Errors errors){
         userService.updatePwd(userPrincipal.getEmail(), updatePwdDto);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
@@ -52,14 +53,14 @@ public class UserController {
     @PostMapping("/style")
     public ResponseEntity<?> uploadStyle(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                          @RequestParam("file") List<MultipartFile> file){
-        userService.uploadStyle(file,userPrincipal.getEmail());
+        userService.uploadStyle(file, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @DeleteMapping("/style")
     public ResponseEntity<?> deleteStyle(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                          @RequestParam("file") String filePath){
-        userService.deleteStyle(filePath,userPrincipal.getEmail());
+        userService.deleteStyle(filePath, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 }
