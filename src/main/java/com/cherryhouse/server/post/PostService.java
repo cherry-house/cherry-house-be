@@ -96,6 +96,10 @@ public class PostService {
         post.deletePost();
     }
 
+    public Page<Post> getPostsByUserEmail(String email, Pageable pageable){
+        return postRepository.findByUserEmail(email, pageable);
+    }
+
     public Post getPostById(Long postId) {
         return postRepository.findById(postId).orElseThrow(() -> new ApiException(ExceptionCode.POST_NOT_FOUND));
     }

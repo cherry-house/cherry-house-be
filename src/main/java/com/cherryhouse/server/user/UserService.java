@@ -6,6 +6,7 @@ import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.auth.dto.AuthRequest;
 import com.cherryhouse.server.post.Post;
 import com.cherryhouse.server.post.PostRepository;
+import com.cherryhouse.server.post.PostService;
 import com.cherryhouse.server.post.image.ImageMapping;
 import com.cherryhouse.server.post.image.ImageService;
 import com.cherryhouse.server.post.posttag.PostTagMapping;
@@ -39,7 +40,7 @@ public class UserService {
     private final StyleRepository styleRepository;
     private final S3Service s3Service;
     private final PasswordEncoder passwordEncoder;
-    private final PostRepository postRepository;
+    private final PostService postService;
     private final TagService tagService;
     private final ImageService imageService;
 
@@ -61,7 +62,7 @@ public class UserService {
         User user = findById(userId);
 
         List<Style> styleList = styleRepository.findByUserId(user.getId());
-        Page<Post> postList = postRepository.findByUserEmail(user.getEmail(), pageable);
+        Page<Post> postList = postService.getPostsByUserEmail(user.getEmail(), pageable);
 
         PageData pageData = getPageData(postList);
         List<PostTagMapping.TagsDto> tagsDtoList = tagService.getTagsDtoList(postList.getContent());
