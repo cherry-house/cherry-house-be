@@ -6,6 +6,8 @@ import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.auth.dto.AuthRequest;
 import com.cherryhouse.server.post.Post;
 import com.cherryhouse.server.post.PostRepository;
+import com.cherryhouse.server.post.image.ImageMapping;
+import com.cherryhouse.server.post.image.ImageService;
 import com.cherryhouse.server.post.posttag.PostTagMapping;
 import com.cherryhouse.server.post.tag.TagService;
 import com.cherryhouse.server.s3.S3Service;
@@ -39,8 +41,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
     private final TagService tagService;
+    private final ImageService imageService;
 
     //user 관련------------------------------------------------------
+
     @Transactional
     public User save(AuthRequest.JoinDto joinDto){
         User user = User.builder()
@@ -57,12 +61,13 @@ public class UserService {
         User user = findById(userId);
 
         List<Style> styleList = styleRepository.findByUserId(user.getId());
-
         Page<Post> postList = postRepository.findByUserEmail(user.getEmail(), pageable);
+
         PageData pageData = getPageData(postList);
         List<PostTagMapping.TagsDto> tagsDtoList = tagService.getTagsDtoList(postList.getContent());
+        List<ImageMapping.UrlDto> urlDtoList = imageService.getUrlDtoList(postList.getContent());
 
-        return UserResponse.UserDto.of(pageData, user, styleList, postList.getContent(), tagsDtoList);
+        return UserResponse.UserDto.of(pageData, user, styleList, postList.getContent(), tagsDtoList, urlDtoList);
     }
 
     @Transactional

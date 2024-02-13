@@ -2,6 +2,7 @@ package com.cherryhouse.server.user.dto;
 
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.Post;
+import com.cherryhouse.server.post.image.ImageMapping;
 import com.cherryhouse.server.post.posttag.PostTagMapping;
 import com.cherryhouse.server.style.Style;
 import com.cherryhouse.server.user.User;
@@ -36,7 +37,8 @@ public class UserResponse {
                                  User user,
                                  List<Style> styleList,
                                  List<Post> postList,
-                                 List<PostTagMapping.TagsDto> tagsDtoList
+                                 List<PostTagMapping.TagsDto> tagsDtoList,
+                                 List<ImageMapping.UrlDto> urlDtoList
         ){
             return new UserDto(
                     pageData,
@@ -47,9 +49,12 @@ public class UserResponse {
                             .map(StyleDto::new)
                             .toList(),
                     postList.stream()
-                            .map(post -> new PostDto(post, PostTagMapping.getTagsByPostId(tagsDtoList, post.getId())))
+                            .map(post -> new PostDto(
+                                    post,
+                                    PostTagMapping.getTagsByPostId(tagsDtoList, post.getId()),
+                                    ImageMapping.getUrlByPostId(urlDtoList, post.getId())
+                            ))
                             .toList()
-
             );
         }
 
@@ -65,6 +70,7 @@ public class UserResponse {
             }
         }
 
+        //TODO: 위치 로직 추가
         public record PostDto (
                 Long id,
                 String title,
@@ -72,9 +78,9 @@ public class UserResponse {
                 String address,
                 Integer distance,
                 List<String> tags,
-                List<String> photos
+                String image
         ){
-            public PostDto(Post post, List<String> tags) {
+            public PostDto(Post post, List<String> tags, String image) {
                 this(
                         post.getId(),
                         post.getTitle(),
@@ -82,7 +88,7 @@ public class UserResponse {
                         null,
                         null,
                         tags,
-                        null
+                        image
                 );
             }
         }
