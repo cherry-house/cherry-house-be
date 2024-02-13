@@ -16,7 +16,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ImageService {
 
-    public final S3Service s3Service;
+    private final S3Service s3Service;
     private final ImageRepository imageRepository;
 
     @Transactional

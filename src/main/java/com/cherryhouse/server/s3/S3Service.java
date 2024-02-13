@@ -48,6 +48,7 @@ public class S3Service {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(file.getSize());
         objectMetadata.setContentType(file.getContentType());
+
         try(InputStream inputStream = file.getInputStream()){
             amazonS3.putObject(new PutObjectRequest(bucket,objectKey,inputStream,objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));

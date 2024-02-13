@@ -10,7 +10,6 @@ import java.util.List;
 public class ImageMapping {
 
     //일급 클래스에 담아서 반환하기
-
     public record ImageDto (
             Long id,
             String url

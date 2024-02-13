@@ -45,12 +45,11 @@ public class HeartService {
                     .build();
 
             heartRepository.save(heart);
-
             return true;
         }
     }
 
-    public boolean heartExists(User user, Long postId){
+    private boolean heartExists(User user, Long postId){
         return heartRepository.existsByUserAndPost(user.getEmail(), postId);
     }
 

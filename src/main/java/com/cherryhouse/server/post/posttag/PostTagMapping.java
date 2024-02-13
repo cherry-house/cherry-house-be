@@ -10,7 +10,6 @@ import java.util.List;
 public class PostTagMapping {
 
     //일급 클래스에 담아서 반환하기
-
     public record TagsDto (
             Long postId,
             List<String> tags
