@@ -1,16 +1,12 @@
 package com.cherryhouse.server.user.dto;
 
 import com.cherryhouse.server._core.util.PageData;
-import com.cherryhouse.server.heart.HeartResponse;
 import com.cherryhouse.server.post.Post;
-import com.cherryhouse.server.posttag.PostTagMapping;
+import com.cherryhouse.server.post.posttag.PostTagMapping;
 import com.cherryhouse.server.style.Style;
 import com.cherryhouse.server.user.User;
-import lombok.*;
 
 import java.util.List;
-
-import static com.cherryhouse.server.posttag.PostTagMapping.getTagsByPostId;
 
 public class UserResponse {
 
@@ -28,7 +24,6 @@ public class UserResponse {
     }
 
     public record UserDto(
-
             PageData pageData,
             String username,
             String profileImg,
@@ -41,7 +36,7 @@ public class UserResponse {
                                  User user,
                                  List<Style> styleList,
                                  List<Post> postList,
-                                 List<PostTagMapping> postTagMappingList
+                                 List<PostTagMapping.TagsDto> tagsDtoList
         ){
             return new UserDto(
                     pageData,
@@ -52,12 +47,11 @@ public class UserResponse {
                             .map(StyleDto::new)
                             .toList(),
                     postList.stream()
-                            .map(post -> new PostDto(post, getTagsByPostId(postTagMappingList, post.getId())))
+                            .map(post -> new PostDto(post, PostTagMapping.getTagsByPostId(tagsDtoList, post.getId())))
                             .toList()
 
             );
         }
-
 
         public record StyleDto(
                 Long id,
@@ -70,6 +64,7 @@ public class UserResponse {
                 );
             }
         }
+
         public record PostDto (
                 Long id,
                 String title,
@@ -92,5 +87,4 @@ public class UserResponse {
             }
         }
     }
-
 }

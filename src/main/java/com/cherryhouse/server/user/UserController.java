@@ -32,6 +32,7 @@ public class UserController {
         userService.updateInfo(userPrincipal.getEmail(), updateInfoDto);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
+
     @PutMapping("/profileImg")
     public ResponseEntity<?> updateImg(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                        @RequestParam("file") MultipartFile file){
@@ -45,8 +46,6 @@ public class UserController {
         userService.updatePwd(userPrincipal.getEmail(), updatePwdDto);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
-
-
 
     //------------------------------------------------------
 

@@ -6,11 +6,11 @@ import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.auth.dto.AuthRequest;
 import com.cherryhouse.server.post.Post;
 import com.cherryhouse.server.post.PostRepository;
-import com.cherryhouse.server.posttag.PostTagMapping;
+import com.cherryhouse.server.post.posttag.PostTagMapping;
+import com.cherryhouse.server.post.tag.TagService;
 import com.cherryhouse.server.s3.S3Service;
 import com.cherryhouse.server.style.Style;
 import com.cherryhouse.server.style.StyleRepository;
-import com.cherryhouse.server.tag.TagService;
 import com.cherryhouse.server.user.dto.UserRequest;
 import com.cherryhouse.server.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.cherryhouse.server._core.util.PageData.getPageData;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -38,7 +39,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
     private final TagService tagService;
-
 
     //user 관련------------------------------------------------------
     @Transactional
@@ -53,7 +53,6 @@ public class UserService {
         return user;
     }
 
-    @Transactional
     public UserResponse.UserDto getUserInfo(Long userId, Pageable pageable) {
         User user = findById(userId);
 
@@ -61,11 +60,11 @@ public class UserService {
 
         Page<Post> postList = postRepository.findByUserEmail(user.getEmail(), pageable);
         PageData pageData = getPageData(postList);
-        List<PostTagMapping> postTagMappings = postList.stream() //post id 마다 tags 를 일급 클래스에 담아서 가지고 오기
-                .map(post -> new PostTagMapping(post.getId(), tagService.getTags(post.getId())))
-                .toList();
-        return UserResponse.UserDto.of(pageData,user,styleList,postList.getContent(),postTagMappings);
+        List<PostTagMapping.TagsDto> tagsDtoList = tagService.getTagsDtoList(postList.getContent());
+
+        return UserResponse.UserDto.of(pageData, user, styleList, postList.getContent(), tagsDtoList);
     }
+
     @Transactional
     public void updateInfo(String email, UserRequest.UpdateInfoDto updateInfoDto){
         if(!Objects.equals(email, updateInfoDto.email())){
@@ -73,15 +72,13 @@ public class UserService {
         }
         User user = findByEmail(email);
         user.updateInfo(updateInfoDto.username(), updateInfoDto.introduction());
-
-
     }
+
     @Transactional
     public void updatePwd(String email, UserRequest.UpdatePwdDto updatePwdDto){
         if(!Objects.equals(email, updatePwdDto.email())){
             throw new ApiException(ExceptionCode.BAD_USER_REQUEST);
         }
-
     }
 
     @Transactional
@@ -98,11 +95,10 @@ public class UserService {
             String fileName = s3Service.uploadOne(file,"profile");
             user.updateImg(fileName);
         }
-
     }
 
-
     //style 관련 ------------------------------------------------------
+
     @Transactional
     public void uploadStyle(List<MultipartFile> file, String email) {
         User user = findByEmail(email);
@@ -127,10 +123,6 @@ public class UserService {
         styleRepository.deleteById(id);
     }
 
-
-
-
-
     //------------------------------------------------------
 
     public void existsByEmail(String email){
@@ -145,12 +137,9 @@ public class UserService {
         );
     }
 
-
     public User findByEmail(String email){
         return userRepository.findByEmail(email).orElseThrow(
                 ()-> new ApiException(ExceptionCode.USER_NOT_FOUND)
         );
     }
-
-
 }
