@@ -5,7 +5,6 @@ import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.auth.dto.AuthRequest;
 import com.cherryhouse.server.post.Post;
-import com.cherryhouse.server.post.PostRepository;
 import com.cherryhouse.server.post.PostService;
 import com.cherryhouse.server.post.image.ImageMapping;
 import com.cherryhouse.server.post.image.ImageService;
@@ -111,9 +110,11 @@ public class UserService {
         List<String> fileNames = s3Service.upload(file, "style");
 
         fileNames.forEach(filePath -> {
+            String accessImgUrl = s3Service.getAccessImgUrl(filePath);
             Style style = Style.builder()
                     .user(user)
-                    .imgUrl(filePath)
+                    .saveImgUrl(filePath)
+                    .accessImgUrl(accessImgUrl)
                     .build();
             styleRepository.save(style);
         });

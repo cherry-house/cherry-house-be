@@ -65,7 +65,7 @@ public class UserResponse {
             public StyleDto(Style style){
                 this(
                         style.getId(),
-                        style.getImgUrl()
+                        style.getAccessImgUrl()
                 );
             }
         }
