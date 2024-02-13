@@ -67,7 +67,7 @@ public class UserService {
         return UserResponse.UserDto.of(pageData,user,styleList,postList.getContent(),postTagMappings);
     }
     @Transactional
-    public void updateInfo(String email, UserRequest.updateInfoDto updateInfoDto){
+    public void updateInfo(String email, UserRequest.UpdateInfoDto updateInfoDto){
         if(!Objects.equals(email, updateInfoDto.email())){
             throw new ApiException(ExceptionCode.BAD_USER_REQUEST);
         }
@@ -77,7 +77,7 @@ public class UserService {
 
     }
     @Transactional
-    public void updatePwd(String email, UserRequest.updatePwdDto updatePwdDto){
+    public void updatePwd(String email, UserRequest.UpdatePwdDto updatePwdDto){
         if(!Objects.equals(email, updatePwdDto.email())){
             throw new ApiException(ExceptionCode.BAD_USER_REQUEST);
         }

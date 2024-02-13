@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 
 public class UserRequest {
 
-    public record updateInfoDto(
+    public record UpdateInfoDto(
 
             @Email
             String email,
@@ -15,18 +15,16 @@ public class UserRequest {
             String introduction
     ){}
 
-    public record updateImgDto(
+    public record UpdateImgDto(
             String email,
             String img
     ){}
 
-    public record updatePwdDto(
+    public record UpdatePwdDto(
             String email,
             @NotBlank(message = "비밀번호는 필수 입력입니다.")
             @NotNull(message = "비밀번호는 필수 입력입니다.")
             @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "비밀번호는 영문자와 숫자를 포함하여 8글자 이상이여야 합니다.")
             String password
     ){}
-
-
 }

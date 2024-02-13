@@ -28,7 +28,7 @@ public class UserController {
 
     @PutMapping("/info")
     public ResponseEntity<?> updateInfo(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                        @RequestBody UserRequest.updateInfoDto updateInfoDto){
+                                        @RequestBody UserRequest.UpdateInfoDto updateInfoDto){
         userService.updateInfo(userPrincipal.getEmail(), updateInfoDto);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
@@ -41,7 +41,7 @@ public class UserController {
 
     @PutMapping("/password")
     public ResponseEntity<?> updatePwd(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                       @RequestBody UserRequest.updatePwdDto updatePwdDto){
+                                       @RequestBody UserRequest.UpdatePwdDto updatePwdDto){
         userService.updatePwd(userPrincipal.getEmail(), updatePwdDto);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
