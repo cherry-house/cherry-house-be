@@ -23,12 +23,14 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final ChatService chatService;
 
+    //채팅방 목록 조회
     @GetMapping
     public ResponseEntity<?> getChatRooms(@AuthenticationPrincipal UserPrincipal userPrincipal, Pageable pageable){
         ChatRoomResponse.ChatRoomsDto response = chatRoomService.getChatRooms(pageable, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success(response));
     }
 
+    //채팅방 생성
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                     @RequestParam(name = "postId") Long postId){
@@ -36,6 +38,7 @@ public class ChatRoomController {
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
+    //채팅 내역 조회(채팅방 연결)
     @GetMapping("/{chatRoomId}")
     public ResponseEntity<?> getChats(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                       @PathVariable("chatRoomId") Long chatRoomId, Pageable pageable){
@@ -43,6 +46,7 @@ public class ChatRoomController {
         return ResponseEntity.ok().body(ApiResponse.success(response));
     }
 
+    //채팅
     @MessageMapping("/chat.{chatRoomId}")
     @SendTo("/queue/{chatRoomId}")
     public ChatDto chat(ChatDto chatDto, @DestinationVariable Long chatRoomId) {
@@ -52,5 +56,13 @@ public class ChatRoomController {
                 .message(chat.getContent())
                 .type(chat.getType())
                 .build();
+    }
+
+    //채팅방 연결 끊기
+    @PostMapping("/{chatRoomId}")
+    public ResponseEntity<?> disconnect(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                      @PathVariable("chatRoomId") Long chatRoomId){
+        chatRoomService.disconnect(chatRoomId, userPrincipal.getEmail());
+        return ResponseEntity.ok().body(ApiResponse.success());
     }
 }

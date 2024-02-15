@@ -66,14 +66,24 @@ public class ChatRoomService {
     public void connect(Long chatRoomId, String email){
         validateChatRoom(chatRoomId, email);
 
-        //입장 내역 저장
+        //채팅방 입장 내역 저장 -> 채팅방 접속
         enter(chatRoomId, email);
-        
+
         //TODO: 읽지 않은 채팅 읽음 처리 쿼리 개선
         chatRepository.findAllByChatRoomIdAndSenderEmail(chatRoomId, email)
                 .forEach(Chat::read);
 
         //TODO: 상대방이 접속 중일 경우 재요청
+    }
+
+    @Transactional
+    public void disconnect(Long chatRoomId, String email){
+        validateChatRoom(chatRoomId, email);
+
+        //채팅방 입장 내역 삭제 -> 채팅방 미접속
+        ChatRoomEntry entry = entryRepository.findByChatRoomIdAndEmail(chatRoomId, email)
+                .orElseThrow(() -> new ApiException(ExceptionCode.CHATROOM_NOT_FOUND));
+        entryRepository.delete(entry);
     }
 
     private void enter(Long chatRoomId, String email) {
