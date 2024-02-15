@@ -1,6 +1,6 @@
 package com.cherryhouse.server._core.config;
 
-import com.cherryhouse.server.chat.StompConnectionInterceptor;
+import com.cherryhouse.server.chatroom.chat.StompConnectionInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

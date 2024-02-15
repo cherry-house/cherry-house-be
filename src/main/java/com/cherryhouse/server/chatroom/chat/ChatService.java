@@ -1,6 +1,6 @@
-package com.cherryhouse.server.chat;
+package com.cherryhouse.server.chatroom.chat;
 
-import com.cherryhouse.server.chat.dto.ChatDto;
+import com.cherryhouse.server.chatroom.dto.ChatDto;
 import com.cherryhouse.server.chatroom.ChatRoom;
 import com.cherryhouse.server.chatroom.ChatRoomService;
 import com.cherryhouse.server.user.User;

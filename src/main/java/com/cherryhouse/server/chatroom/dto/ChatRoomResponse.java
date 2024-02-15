@@ -1,7 +1,7 @@
 package com.cherryhouse.server.chatroom.dto;
 
 import com.cherryhouse.server._core.util.PageData;
-import com.cherryhouse.server.chat.Chat;
+import com.cherryhouse.server.chatroom.chat.Chat;
 import com.cherryhouse.server.chatroom.ChatRoom;
 import com.cherryhouse.server.user.User;
 

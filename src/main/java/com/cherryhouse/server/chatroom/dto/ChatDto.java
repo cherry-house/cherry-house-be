@@ -1,4 +1,4 @@
-package com.cherryhouse.server.chat.dto;
+package com.cherryhouse.server.chatroom.dto;
 
 import lombok.*;
 

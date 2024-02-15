@@ -1,4 +1,4 @@
-package com.cherryhouse.server.chat;
+package com.cherryhouse.server.chatroom.chat;
 
 import com.cherryhouse.server.chatroom.ChatRoom;
 import com.cherryhouse.server.user.User;

@@ -1,4 +1,4 @@
-package com.cherryhouse.server.chat;
+package com.cherryhouse.server.chatroom.chat;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
