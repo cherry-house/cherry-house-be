@@ -15,4 +15,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     Page<ChatRoom> findAllOrderByCreatedDate(Pageable pageable, @Param("email") String email);
 
     Boolean existsByPostIdAndUserEmail(@Param("postId") Long postId, @Param("email") String email);
+
+    Boolean existsByIdAndUserEmail(@Param("id") Long id, @Param("email") String email);
 }

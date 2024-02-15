@@ -16,8 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 import static com.cherryhouse.server._core.util.PageData.getPageData;
 
 @Service
@@ -39,7 +37,7 @@ public class ChatRoomService {
     @Transactional
     public void create(String email, Long postId){
         //TODO: 마감된 post 체크
-        validateChatRoom(email, postId);
+        existsChatRoom(postId, email);
 
         Post post = postService.getPostById(postId);
         User user = userService.findByEmail(email);
@@ -52,17 +50,18 @@ public class ChatRoomService {
     }
 
     public ChatRoomResponse.ChatsDto getChats(Pageable pageable, Long chatRoomId, String email){
-        //TODO: user, chatroom 권한 체크
+        validateChatRoom(chatRoomId, email);
 
         Page<Chat> chatList = chatRepository.findAllByChatRoomIdOrderByCreatedDate(chatRoomId, pageable);
         PageData pageData = getPageData(chatList);
         User user = userService.findByEmail(email);
+
         return ChatRoomResponse.ChatsDto.of(pageData, user, chatList.getContent());
     }
 
     @Transactional
     public void connect(Long chatRoomId, String email){
-        //TODO: user, chatroom 권한 체크
+        validateChatRoom(chatRoomId, email);
 
         //TODO: 입장 내역 저장
         //TODO: 읽지 않은 채팅 읽음 처리 쿼리 개선
@@ -75,9 +74,15 @@ public class ChatRoomService {
         return chatRoomRepository.findById(chatRoomId).orElseThrow(() -> new ApiException(ExceptionCode.CHATROOM_NOT_FOUND));
     }
 
-    private void validateChatRoom(String email, Long postId) {
+    private void existsChatRoom(Long postId, String email) {
         if (chatRoomRepository.existsByPostIdAndUserEmail(postId, email)) {
             throw new ApiException(ExceptionCode.CHATROOM_EXISTS);
+        }
+    }
+
+    private void validateChatRoom(Long chatRoomId, String email){
+        if (chatRoomRepository.existsByIdAndUserEmail(chatRoomId, email)) {
+            throw new ApiException(ExceptionCode.CHATROOM_NOT_FOUND);
         }
     }
 }
