@@ -1,4 +1,4 @@
-package com.cherryhouse.server.style;
+package com.cherryhouse.server.user.style;
 
 import com.cherryhouse.server.user.User;
 import jakarta.persistence.*;
