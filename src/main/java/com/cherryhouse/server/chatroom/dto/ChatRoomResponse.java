@@ -56,7 +56,7 @@ public class ChatRoomResponse {
                     pageData,
                     new UserDto(user),
                     chatList.stream()
-                            .map(ChatDto::new)
+                            .map(chat -> new ChatDto(chat, user.getId()))
                             .toList()
             );
         }
@@ -69,13 +69,13 @@ public class ChatRoomResponse {
                 Boolean isRead
 
         ){
-            public ChatDto(Chat chat) {
+            public ChatDto(Chat chat, Long userId) {
                 this(
                         chat.getId(),
                         chat.getContent(),
                         chat.getCreatedDate(),
-                        null,
-                        null
+                        !userId.equals(chat.getSender().getId()),
+                        userId.equals(chat.getSender().getId()) || chat.getIsRead()
                 );
             }
         }

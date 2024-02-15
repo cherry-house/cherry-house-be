@@ -15,13 +15,14 @@ function setConnected(connected) {
 }
 
 function connect() {
-    var socket = new SockJS('/gs-guide-websocket');
+    var socket = new SockJS('/websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
         stompClient.subscribe('/queue/' + chatRoomId, function (msg) {
-            showMessages(JSON.parse(msg.body).message);
+            var result = JSON.parse(msg.body);
+            showMessages(result.message, result.isRead);
         });
     });
 }
@@ -46,8 +47,10 @@ function sendMsg() {
     );
 }
 
-function showMessages(message) {
-    $("#messages").append("<tr><td>" + message + "</td></tr>");
+function showMessages(message, isRead) {
+    var state = (isRead === true) ? "읽음" : "안읽음";
+    $("#messages").append("<tr><td>" + message + "</td></tr>")
+        .append("<tr><td>" + state + "</td></tr>");
 }
 
 $(function () {

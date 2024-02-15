@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.cherryhouse.server._core.util.PageData.getPageData;
 
 @Service
@@ -36,6 +38,7 @@ public class ChatRoomService {
 
     @Transactional
     public void create(String email, Long postId){
+        //TODO: 마감된 post 체크
         validateChatRoom(email, postId);
 
         Post post = postService.getPostById(postId);
@@ -49,11 +52,23 @@ public class ChatRoomService {
     }
 
     public ChatRoomResponse.ChatsDto getChats(Pageable pageable, Long chatRoomId, String email){
-        //TODO: 읽음 처리
+        //TODO: user, chatroom 권한 체크
+
         Page<Chat> chatList = chatRepository.findAllByChatRoomIdOrderByCreatedDate(chatRoomId, pageable);
         PageData pageData = getPageData(chatList);
         User user = userService.findByEmail(email);
         return ChatRoomResponse.ChatsDto.of(pageData, user, chatList.getContent());
+    }
+
+    @Transactional
+    public void connect(Long chatRoomId, String email){
+        //TODO: user, chatroom 권한 체크
+
+        //TODO: 입장 내역 저장
+        //TODO: 읽지 않은 채팅 읽음 처리 쿼리 개선
+        chatRepository.findAllByChatRoomIdAndSenderEmail(chatRoomId, email)
+                .forEach(Chat::read);
+        //TODO: 상대방이 접속 중일 경우 재요청
     }
 
     public ChatRoom getChatRoom(Long chatRoomId){

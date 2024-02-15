@@ -35,11 +35,16 @@ public class Chat {
     private String createdDate;
 
     @Builder
-    public Chat(String content, ChatRoom chatRoom, User sender, String type) {
+    public Chat(String content, ChatRoom chatRoom, User sender, Boolean isRead, String type) {
         this.content = content;
         this.chatRoom = chatRoom;
         this.sender = sender;
+        this.isRead = isRead;
         this.type = type;
         this.createdDate = String.valueOf(LocalDateTime.now());
+    }
+
+    public void read(){
+        this.isRead = true;
     }
 }
