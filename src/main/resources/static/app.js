@@ -21,7 +21,7 @@ function connect() {
         setConnected(true);
         console.log('Connected: ' + frame);
         stompClient.subscribe('/queue/' + chatRoomId, function (msg) {
-            showMessages(JSON.parse(msg.body).content);
+            showMessages(JSON.parse(msg.body).message);
         });
     });
 }
@@ -39,6 +39,7 @@ function sendMsg() {
         "/app/chat." + chatRoomId,
         {},
         JSON.stringify({
+            'sender': 1,
             'message': $("#msg").val(),
             'type': 'text'
         })

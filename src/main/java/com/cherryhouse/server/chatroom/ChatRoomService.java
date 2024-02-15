@@ -4,7 +4,7 @@ import com.cherryhouse.server._core.exception.ApiException;
 import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.chat.Chat;
-import com.cherryhouse.server.chat.ChatService;
+import com.cherryhouse.server.chat.ChatRepository;
 import com.cherryhouse.server.chatroom.dto.ChatRoomResponse;
 import com.cherryhouse.server.post.Post;
 import com.cherryhouse.server.post.PostService;
@@ -25,7 +25,7 @@ public class ChatRoomService {
 
     private final PostService postService;
     private final UserService userService;
-    private final ChatService chatService;
+    private final ChatRepository chatRepository;
     private final ChatRoomRepository chatRoomRepository;
 
     public ChatRoomResponse.ChatRoomsDto getChatRooms(Pageable pageable, String email){
@@ -50,7 +50,7 @@ public class ChatRoomService {
 
     public ChatRoomResponse.ChatsDto getChats(Pageable pageable, Long chatRoomId, String email){
         //TODO: 읽음 처리
-        Page<Chat> chatList = chatService.getChats(pageable, chatRoomId);
+        Page<Chat> chatList = chatRepository.findAllByChatRoomIdOrderByCreatedDate(chatRoomId, pageable);
         PageData pageData = getPageData(chatList);
         User user = userService.findByEmail(email);
         return ChatRoomResponse.ChatsDto.of(pageData, user, chatList.getContent());
