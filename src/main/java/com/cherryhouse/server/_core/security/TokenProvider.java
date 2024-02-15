@@ -134,7 +134,7 @@ public class TokenProvider {
         return ACCESS_TOKEN_EXPIRE_TIME;
     }
 
-    public Long getExpiration( String accessToken){
+    public Long getExpiration(String accessToken){
         Date expiration = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -145,5 +145,14 @@ public class TokenProvider {
         long now = new Date().getTime();
 
         return (expiration.getTime() - now);
+    }
+
+    public String getEmail(String accessToken){
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .getSubject();
     }
 }
