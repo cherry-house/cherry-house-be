@@ -3,7 +3,6 @@ package com.cherryhouse.server.chatroom;
 import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.util.ApiResponse;
 import com.cherryhouse.server.chatroom.chat.Chat;
-import com.cherryhouse.server.chatroom.chat.ChatService;
 import com.cherryhouse.server.chatroom.dto.ChatDto;
 import com.cherryhouse.server.chatroom.dto.ChatRoomResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
-    private final ChatService chatService;
 
     //채팅방 목록 조회
     @GetMapping
@@ -50,7 +48,7 @@ public class ChatRoomController {
     @MessageMapping("/chat.{chatRoomId}")
     @SendTo("/queue/{chatRoomId}")
     public ChatDto chat(ChatDto chatDto, @DestinationVariable Long chatRoomId) {
-        Chat chat = chatService.create(chatDto, chatRoomId);
+        Chat chat = chatRoomService.chat(chatDto, chatRoomId);
         return ChatDto.builder()
                 .sender(chat.getSender().getId())
                 .message(chat.getContent())

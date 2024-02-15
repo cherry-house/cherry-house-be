@@ -1,4 +1,4 @@
-package com.cherryhouse.server.chatroom.entry;
+package com.cherryhouse.server.chatroom.session;
 
 import jakarta.persistence.Id;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @NoArgsConstructor
 @RedisHash
-public class ChatRoomEntry {
+public class ChatRoomSession {
 
     @Id
     private String id;
@@ -19,7 +19,7 @@ public class ChatRoomEntry {
     private String email;
 
     @Builder
-    public ChatRoomEntry(Long chatRoomId, String email) {
+    public ChatRoomSession(Long chatRoomId, String email) {
         this.chatRoomId = chatRoomId;
         this.email = email;
     }
