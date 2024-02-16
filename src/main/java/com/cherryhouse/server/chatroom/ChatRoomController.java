@@ -2,8 +2,8 @@ package com.cherryhouse.server.chatroom;
 
 import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.util.ApiResponse;
-import com.cherryhouse.server.chatroom.chat.Chat;
-import com.cherryhouse.server.chatroom.dto.ChatDto;
+import com.cherryhouse.server.chatroom.dto.ChatRequest;
+import com.cherryhouse.server.chatroom.dto.ChatResponse;
 import com.cherryhouse.server.chatroom.dto.ChatRoomResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -47,13 +47,8 @@ public class ChatRoomController {
     //채팅
     @MessageMapping("/chat.{chatRoomId}")
     @SendTo("/queue/{chatRoomId}")
-    public ChatDto chat(ChatDto chatDto, @DestinationVariable Long chatRoomId) {
-        Chat chat = chatRoomService.chat(chatDto, chatRoomId);
-        return ChatDto.builder()
-                .sender(chat.getSender().getEmail())
-                .message(chat.getContent())
-                .type(chat.getType())
-                .build();
+    public ChatResponse chat(ChatRequest request, @DestinationVariable Long chatRoomId) {
+        return chatRoomService.chat(request, chatRoomId);
     }
 
     //채팅방 연결 끊기

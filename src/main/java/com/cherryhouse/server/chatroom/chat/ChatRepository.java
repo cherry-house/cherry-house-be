@@ -18,6 +18,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     @Query("select c from Chat c " +
             "where c.chatRoom.id = :chatRoomId " +
-            "and c.sender.email = :email and c.isRead is false")
-    List<Chat> findAllByChatRoomIdAndSenderEmail(@Param("chatRoomId") Long chatRoomId, @Param("email") String email);
+            "and c.receiver.email = :email " +
+            "and c.isRead = false")
+    List<Chat> findAllByChatRoomIdAndReceiverEmail(@Param("chatRoomId") Long chatRoomId, @Param("email") String email);
 }
