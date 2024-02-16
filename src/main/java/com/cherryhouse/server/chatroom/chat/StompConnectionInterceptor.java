@@ -29,7 +29,7 @@ public class StompConnectionInterceptor implements ChannelInterceptor {
         tokenProvider.validateToken(accessToken);
 
         if(command == StompCommand.CONNECT){
-            //채팅룸 연결
+            //채팅방 연결
             Long chatRoomId = getChatRoomId(accessor);
             String email = tokenProvider.getEmail(accessToken);
             chatRoomService.connect(chatRoomId, email);

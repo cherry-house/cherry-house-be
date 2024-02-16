@@ -50,7 +50,7 @@ public class ChatRoomController {
     public ChatDto chat(ChatDto chatDto, @DestinationVariable Long chatRoomId) {
         Chat chat = chatRoomService.chat(chatDto, chatRoomId);
         return ChatDto.builder()
-                .sender(chat.getSender().getId())
+                .sender(chat.getSender().getEmail())
                 .message(chat.getContent())
                 .type(chat.getType())
                 .build();

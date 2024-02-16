@@ -13,6 +13,7 @@ import com.cherryhouse.server.post.PostService;
 import com.cherryhouse.server.user.User;
 import com.cherryhouse.server.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class ChatRoomService {
 
     @Transactional
     public void create(String email, Long postId){
-        //TODO: 마감된 post 체크
+        //TODO: 예약 마감된 post 체크
         existsChatRoom(postId, email);
 
         Post post = postService.getPostById(postId);
@@ -79,7 +80,7 @@ public class ChatRoomService {
     public Chat chat(ChatDto chatDto, Long chatRoomId){
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new ApiException(ExceptionCode.CHATROOM_NOT_FOUND));
-        User user = userService.findById(chatDto.getSender());
+        User user = userService.findByEmail(chatDto.getSender());
 
         Chat chat = Chat.builder()
                 .content(chatDto.getMessage())
@@ -107,7 +108,7 @@ public class ChatRoomService {
     }
 
     private void validateChatRoom(Long chatRoomId, String email){
-        if (chatRoomRepository.existsByIdAndUserEmail(chatRoomId, email)) {
+        if (!chatRoomRepository.existsByIdAndUserEmail(chatRoomId, email)) {
             throw new ApiException(ExceptionCode.CHATROOM_NOT_FOUND);
         }
     }

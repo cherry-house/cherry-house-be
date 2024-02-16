@@ -40,7 +40,7 @@ function sendMsg() {
         "/app/chat." + chatRoomId,
         {},
         JSON.stringify({
-            'sender': 1,
+            'sender': 'cherry1@cherry.com',
             'message': $("#msg").val(),
             'type': 'text'
         })
