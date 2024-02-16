@@ -7,13 +7,13 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ChatRequest {
-    private String sender;
+    private String accessToken;
     private String message;
     private String type;
 
     @Builder
-    public ChatRequest(String sender, String message, String type) {
-        this.sender = sender;
+    public ChatRequest(String accessToken, String message, String type) {
+        this.accessToken = accessToken;
         this.message = message;
         this.type = type;
     }

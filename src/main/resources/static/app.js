@@ -1,5 +1,5 @@
 var stompClient = null;
-var chatRoomId = 1;
+var chatRoomId = null;
 var accessToken = null;
 
 function setConnected(connected) {
@@ -53,7 +53,7 @@ function sendMsg() {
         "/app/chat." + chatRoomId,
         {},
         JSON.stringify({
-            'sender': 'cherry1@cherry.com',
+            'accessToken': accessToken,
             'message': $("#msg").val(),
             'type': 'text'
         })
@@ -67,8 +67,9 @@ function showMessages(message, isRead) {
 }
 
 $(function () {
-    $("#tokenBtn").click(function () {
+    $("#info").click(function () {
         accessToken = $("#token").val();
+        chatRoomId = $("#chatRoomId").val();
         console.log('Access Token set:', accessToken);
         alert('ok');
     });
