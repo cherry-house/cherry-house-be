@@ -1,8 +1,10 @@
 var stompClient = null;
-
 var chatRoomId = 1;
+var accessToken = null;
 
 function setConnected(connected) {
+    console.log('set connected');
+
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
@@ -15,11 +17,22 @@ function setConnected(connected) {
 }
 
 function connect() {
+    console.log('connect - Access Token:', accessToken);
+    if (!accessToken) {
+        alert('no Access Token');
+        return;
+    }
+
     var socket = new SockJS('/websocket');
     stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
+    stompClient.connect({ Authorization: accessToken }, function (frame) {
         setConnected(true);
+
+        stompClient.heartbeat.outgoing = 10000;
+        stompClient.heartbeat.incoming = 10000;
+
         console.log('Connected: ' + frame);
+
         stompClient.subscribe('/queue/' + chatRoomId, function (msg) {
             var result = JSON.parse(msg.body);
             showMessages(result.message, result.isRead);
@@ -48,12 +61,17 @@ function sendMsg() {
 }
 
 function showMessages(message, isRead) {
-    var state = (isRead === true) ? "읽음" : "안읽음";
+    var state = (isRead === true) ? "0" : "1";
     $("#messages").append("<tr><td>" + message + "</td></tr>")
         .append("<tr><td>" + state + "</td></tr>");
 }
 
 $(function () {
+    $("#tokenBtn").click(function () {
+        accessToken = $("#token").val();
+        console.log('Access Token set:', accessToken);
+        alert('ok');
+    });
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
