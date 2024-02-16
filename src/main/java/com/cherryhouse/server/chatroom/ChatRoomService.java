@@ -81,12 +81,15 @@ public class ChatRoomService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new ApiException(ExceptionCode.CHATROOM_NOT_FOUND));
         User user = userService.findByEmail(chatDto.getSender());
+        //상대방도 접속 중이면, isRead true
+        Boolean isRead = sessionService.isAllConnected(chatRoomId);
 
         Chat chat = Chat.builder()
                 .content(chatDto.getMessage())
                 .chatRoom(chatRoom)
                 .sender(user)
                 .type(chatDto.getType())
+                .isRead(isRead)
                 .build();
 
         chatRepository.save(chat);

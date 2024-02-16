@@ -35,7 +35,7 @@ public class ChatRoomSessionService {
     }
 
     //채팅방 접속 유무 확인
-    public Boolean isConnected(Long chatRoomId){
+    public Boolean isAllConnected(Long chatRoomId){
         List<ChatRoomSession> sessions = sessionRepository.findByChatRoomId(chatRoomId);
         return sessions.size() == CHAT_ROOM_MAXIMUM;
     }
