@@ -27,7 +27,8 @@ VALUES (1, 2),
        (1, 10);
 
 INSERT INTO chat_room_tb (user_id, post_id)
-VALUES (2, 1);
+VALUES (2, 1),
+       (2, 1);
 
 INSERT INTO chat_tb (content, chat_room_id, sender_id, is_read, type)
 VALUES ('안녕하세요', 1, 2, 0, 'text');
