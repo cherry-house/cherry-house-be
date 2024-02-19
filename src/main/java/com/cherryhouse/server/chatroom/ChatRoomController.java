@@ -52,7 +52,7 @@ public class ChatRoomController {
     }
 
     //채팅방 연결 끊기
-    @PostMapping("/{chatRoomId}")
+    @DeleteMapping("/{chatRoomId}")
     public ResponseEntity<?> disconnect(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                       @PathVariable("chatRoomId") Long chatRoomId){
         chatRoomService.disconnect(chatRoomId, userPrincipal.getEmail());
