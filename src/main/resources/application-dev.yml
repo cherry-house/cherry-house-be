@@ -29,6 +29,14 @@ spring:
           max-active: 8
       port: 6379
       host: 127.0.01
+    mongodb:
+      host: localhost #로컬
+      port: 27017
+      database: cherry
+      username: root
+      password: 1234
+      authentication-database: admin
+      uri: mongodb://root:1234@localhost:27017/cherry
   mail:
     host: ${MAIL_HOST}
     port: 587
