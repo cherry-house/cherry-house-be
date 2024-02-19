@@ -25,7 +25,7 @@ function connect() {
 
     var socket = new SockJS('/websocket');
     stompClient = Stomp.over(socket);
-    stompClient.connect({ Authorization: accessToken }, function (frame) {
+    stompClient.connect({ Authorization: accessToken, ChatRoomId: chatRoomId }, function (frame) {
         setConnected(true);
 
         stompClient.heartbeat.outgoing = 10000;
@@ -61,6 +61,7 @@ function sendMsg() {
 }
 
 function showMessages(message, isRead) {
+    console.log("isRead:" + isRead);
     var state = (isRead === true) ? "0" : "1";
     $("#messages").append("<tr><td>" + message + "</td></tr>")
         .append("<tr><td>" + state + "</td></tr>");
@@ -71,6 +72,7 @@ $(function () {
         accessToken = $("#token").val();
         chatRoomId = $("#chatRoomId").val();
         console.log('Access Token set:', accessToken);
+        console.log('ChatRoomID:', chatRoomId);
         alert('ok');
     });
     $("form").on('submit', function (e) {
