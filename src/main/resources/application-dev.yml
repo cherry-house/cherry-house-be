@@ -30,13 +30,13 @@ spring:
       port: 6379
       host: 127.0.01
     mongodb:
-      host: localhost #로컬
-      port: 27017
-      database: cherry
-      username: root
-      password: 1234
+      host: ${MONGO_HOST} #로컬
+      port: ${MONGO_PORT}
+      database: ${MONGO_DB}
+      username: ${MONGO_USERNAME}
+      password: ${MONGO_PASSWORD}
       authentication-database: admin
-      uri: mongodb://root:1234@localhost:27017/cherry
+      uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB}
   mail:
     host: ${MAIL_HOST}
     port: 587

@@ -18,20 +18,22 @@ services:
     volumes:
       - ./data/db:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=1234
-      - MONGO_INITDB_ROOT_DATABASE=cherry
-      - MONGO_DB_USERNAME=root
-      - MONGO_DB_PASSWORD=1234
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_ROOT_DATABASE=${MONGO_DB}
+      - MONGO_DB_USERNAME=${MONGO_USERNAME}
+      - MONGO_DB_PASSWORD=${MONGO_PASSWORD}
   mongo-express:
     image: mongo-express
     container_name: express
+    env_file:
+      - .env
     restart: always
     ports:
       - "8081:8081"
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: 1234
-      ME_CONFIG_MONGODB_URL: mongodb://root:1234@mongodb:27017?authSource=admin
-      ME_CONFIG_BASICAUTH_USERNAME: root
-      ME_CONFIG_BASICAUTH_PASSWORD: 1234
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017?authSource=admin
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_PASSWORD}
