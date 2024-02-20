@@ -31,7 +31,6 @@ public class ChatRoomService {
     private final PostService postService;
     private final UserService userService;
     private final ChatService chatService;
-    private final ChatRepository chatRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomSessionService sessionService;
     private final TokenProvider tokenProvider;
@@ -58,9 +57,9 @@ public class ChatRoomService {
     }
 
     public ChatRoomResponse.ChatsDto getChats(Pageable pageable, Long chatRoomId, String email){
-        validateChatRoom(chatRoomId, email);
+        //validateChatRoom(chatRoomId, email);
 
-        Page<Chat> chatList = chatRepository.findAllByChatRoomIdOrderByCreatedDate(chatRoomId, pageable);
+        Page<Chat> chatList = chatService.getChats(chatRoomId, pageable);
         PageData pageData = getPageData(chatList);
         User user = userService.findByEmail(email);
 

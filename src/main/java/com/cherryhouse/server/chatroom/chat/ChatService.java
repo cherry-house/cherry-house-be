@@ -4,6 +4,8 @@ import com.cherryhouse.server.chatroom.ChatRoom;
 import com.cherryhouse.server.chatroom.session.ChatRoomSessionService;
 import com.cherryhouse.server.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,5 +39,9 @@ public class ChatService {
         //TODO: 읽지 않은 채팅 읽음 처리 쿼리 개선
         chatRepository.findAllByChatRoomIdAndReceiverEmail(chatRoomId, email)
                 .forEach(Chat::read);
+    }
+
+    public Page<Chat> getChats(Long chatRoomId, Pageable pageable){
+        return chatRepository.findAllByChatRoomIdOrderByCreatedDate(chatRoomId, pageable);
     }
 }

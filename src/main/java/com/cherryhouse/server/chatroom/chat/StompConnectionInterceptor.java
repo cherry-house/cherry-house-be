@@ -1,7 +1,5 @@
 package com.cherryhouse.server.chatroom.chat;
 
-import com.cherryhouse.server._core.exception.ApiException;
-import com.cherryhouse.server._core.exception.ExceptionCode;
 import com.cherryhouse.server._core.security.TokenProvider;
 import com.cherryhouse.server.chatroom.ChatRoomService;
 import lombok.RequiredArgsConstructor;
