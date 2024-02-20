@@ -57,8 +57,6 @@ public class ChatRoomService {
     }
 
     public ChatRoomResponse.ChatsDto getChats(Pageable pageable, Long chatRoomId, String email){
-        //validateChatRoom(chatRoomId, email);
-
         Page<Chat> chatList = chatService.getChats(chatRoomId, pageable);
         PageData pageData = getPageData(chatList);
         User user = userService.findByEmail(email);
@@ -68,8 +66,6 @@ public class ChatRoomService {
 
     @Transactional
     public void connect(Long chatRoomId, String email){
-        //TODO: validateChatRoom(chatRoomId, email);
-
         //채팅방 입장 내역 저장 -> 채팅방 접속
         sessionService.create(chatRoomId, email);
 
@@ -100,8 +96,6 @@ public class ChatRoomService {
 
     @Transactional
     public void disconnect(Long chatRoomId, String email){
-        //TODO: validateChatRoom(chatRoomId, email);
-
         //채팅방 입장 내역 삭제 -> 채팅방 미접속
         sessionService.delete(chatRoomId, email);
     }
@@ -109,12 +103,6 @@ public class ChatRoomService {
     private void existsChatRoom(Long postId, String email) {
         if (chatRoomRepository.existsByPostIdAndUserEmail(postId, email)) {
             throw new ApiException(ExceptionCode.CHATROOM_EXISTS);
-        }
-    }
-
-    private void validateChatRoom(Long chatRoomId, String email){
-        if (!chatRoomRepository.existsByIdAndUserEmail(chatRoomId, email)) {
-            throw new ApiException(ExceptionCode.CHATROOM_NOT_FOUND);
         }
     }
 }

@@ -36,7 +36,7 @@ public class ChatRoomController {
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
-    //채팅 내역 조회(채팅방 연결)
+    //채팅 내역 조회
     @GetMapping("/{chatRoomId}")
     public ResponseEntity<?> getChats(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                       @PathVariable("chatRoomId") Long chatRoomId, Pageable pageable){
