@@ -1,5 +1,6 @@
 INSERT INTO user_tb (email, password, name, profile_image, introduction)
-VALUES ('cherry@cherry.com', '$2a$12$gP85FkXghfpyI2eiba.FZ.8i8N2541KqTRCT4ujSjrYDTFBAgFEiG', '이피글', null, '1년차 초보 미용사 입니다 :) ');
+VALUES ('cherry@cherry.com', '$2a$12$gP85FkXghfpyI2eiba.FZ.8i8N2541KqTRCT4ujSjrYDTFBAgFEiG', '이피글', null, '1년차 초보 미용사 입니다 :) '),
+       ('cherry1@cherry.com', '$2a$12$gP85FkXghfpyI2eiba.FZ.8i8N2541KqTRCT4ujSjrYDTFBAgFEiG', '2피글', null, '2년차 초보 미용사 입니다 :) ');
 
 
 INSERT INTO post_tb (title, content, category, created_date, user_id)
@@ -17,10 +18,17 @@ VALUES ('부산 헤어 모델 구해요!', '서면 피글 미용실에서 무료
        ('예쁘게 머리 하고 가세요~', '서면 피글 미용실에서 무료로 헤어 모델 하실 분 구합니다. 1년차 미용사입니다.', 'HAIR', '2024-01-16', 1);
 
 INSERT INTO heart_tb (user_id, post_id)
-VALUES (1,2),
-       (1,3),
-       (1,4),
-       (1,7),
-       (1,8),
-       (1,9),
-       (1,10);
+VALUES (1, 2),
+       (1, 3),
+       (1, 4),
+       (1, 7),
+       (1, 8),
+       (1, 9),
+       (1, 10);
+
+INSERT INTO chat_room_tb (user_id, post_id)
+VALUES (2, 1),
+       (2, 1);
+
+INSERT INTO chat_tb (content, chat_room_id, sender_id, is_read, type)
+VALUES ('안녕하세요', 1, 2, 0, 'text');

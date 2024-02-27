@@ -1,16 +1,13 @@
 package com.cherryhouse.server.user.dto;
 
 import com.cherryhouse.server._core.util.PageData;
-import com.cherryhouse.server.heart.HeartResponse;
 import com.cherryhouse.server.post.Post;
-import com.cherryhouse.server.posttag.PostTagMapping;
-import com.cherryhouse.server.style.Style;
+import com.cherryhouse.server.post.image.ImageMapping;
+import com.cherryhouse.server.post.posttag.PostTagMapping;
+import com.cherryhouse.server.user.style.Style;
 import com.cherryhouse.server.user.User;
-import lombok.*;
 
 import java.util.List;
-
-import static com.cherryhouse.server.posttag.PostTagMapping.getTagsByPostId;
 
 public class UserResponse {
 
@@ -28,7 +25,6 @@ public class UserResponse {
     }
 
     public record UserDto(
-
             PageData pageData,
             String username,
             String profileImg,
@@ -41,7 +37,8 @@ public class UserResponse {
                                  User user,
                                  List<Style> styleList,
                                  List<Post> postList,
-                                 List<PostTagMapping> postTagMappingList
+                                 List<PostTagMapping.TagsDto> tagsDtoList,
+                                 List<ImageMapping.UrlDto> urlDtoList
         ){
             return new UserDto(
                     pageData,
@@ -52,12 +49,14 @@ public class UserResponse {
                             .map(StyleDto::new)
                             .toList(),
                     postList.stream()
-                            .map(post -> new PostDto(post, getTagsByPostId(postTagMappingList, post.getId())))
+                            .map(post -> new PostDto(
+                                    post,
+                                    PostTagMapping.getTagsByPostId(tagsDtoList, post.getId()),
+                                    ImageMapping.getUrlByPostId(urlDtoList, post.getId())
+                            ))
                             .toList()
-
             );
         }
-
 
         public record StyleDto(
                 Long id,
@@ -66,10 +65,12 @@ public class UserResponse {
             public StyleDto(Style style){
                 this(
                         style.getId(),
-                        style.getImgUrl()
+                        style.getAccessImgUrl()
                 );
             }
         }
+
+        //TODO: 위치 로직 추가
         public record PostDto (
                 Long id,
                 String title,
@@ -77,9 +78,9 @@ public class UserResponse {
                 String address,
                 Integer distance,
                 List<String> tags,
-                List<String> photos
+                String image
         ){
-            public PostDto(Post post, List<String> tags) {
+            public PostDto(Post post, List<String> tags, String image) {
                 this(
                         post.getId(),
                         post.getTitle(),
@@ -87,10 +88,9 @@ public class UserResponse {
                         null,
                         null,
                         tags,
-                        null
+                        image
                 );
             }
         }
     }
-
 }

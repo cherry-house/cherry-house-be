@@ -1,13 +1,9 @@
 package com.cherryhouse.server.user;
 
-import com.cherryhouse.server.post.Post;
-import com.cherryhouse.server.style.Style;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -34,9 +30,6 @@ public class User {
     @Column
     private String introduction;
 
-
-
-
     @Builder
     public User(Long id, String email, String password, String username, String profileImage, String introduction){
         this.id = id;
@@ -51,7 +44,11 @@ public class User {
         this.name = username;
         this.introduction = introduction;
     }
-    public void updateImg(String img) { this.profileImage = img; }
+
+    public void updateImg(String img){
+        this.profileImage = img;
+    }
+
     public void updatePassword(String password){
         this.password = password;
     }

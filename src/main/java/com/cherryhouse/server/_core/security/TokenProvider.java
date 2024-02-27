@@ -51,8 +51,8 @@ public class TokenProvider {
         UserPrincipal userPrincipal = (UserPrincipal)auth.getPrincipal();
 
         Claims claims = Jwts.claims();
-        claims.put(AUTHORITIES_KEY,authorities);
-        claims.put(USER_EMAIL,userPrincipal.getEmail());
+        claims.put(AUTHORITIES_KEY, authorities);
+        claims.put(USER_EMAIL, userPrincipal.getEmail());
 
         String accessToken = Jwts.builder()
                 .setSubject(userPrincipal.getEmail())
@@ -65,7 +65,7 @@ public class TokenProvider {
 
         String refreshToken = Jwts.builder()
                 .setExpiration(refreshTokenExpire)
-                .signWith(key,SignatureAlgorithm.HS512)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
         return TokenDto.Response.builder()
@@ -134,7 +134,7 @@ public class TokenProvider {
         return ACCESS_TOKEN_EXPIRE_TIME;
     }
 
-    public Long getExpiration( String accessToken){
+    public Long getExpiration(String accessToken){
         Date expiration = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -145,5 +145,14 @@ public class TokenProvider {
         long now = new Date().getTime();
 
         return (expiration.getTime() - now);
+    }
+
+    public String getEmail(String accessToken){
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .get(USER_EMAIL, String.class);
     }
 }

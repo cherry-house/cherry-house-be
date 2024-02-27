@@ -7,11 +7,13 @@ import com.cherryhouse.server.post.dto.PostResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
@@ -21,7 +23,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public ResponseEntity<?> getPosts(@PageableDefault(size = 6) Pageable pageable){
+    public ResponseEntity<?> getPosts(Pageable pageable){
         PostResponse.PostsDto response = postService.getPosts(pageable);
         return ResponseEntity.ok().body(ApiResponse.success(response));
     }
@@ -34,22 +36,24 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                    @RequestBody @Valid PostRequest.CreateDto request, Errors errors){
-        postService.create(request, userPrincipal.getEmail());
+                                    @RequestPart @Valid PostRequest.CreateDto request, Errors errors,
+                                    @RequestPart("images") List<MultipartFile> images){
+        postService.create(request, images, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @PutMapping("/{postId}")
     public ResponseEntity<?> update(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                     @PathVariable(name = "postId") Long postId,
-                                    @RequestBody @Valid PostRequest.UpdateDto request, Errors errors){
-        postService.update(postId, request, userPrincipal.getEmail());
+                                    @RequestPart @Valid PostRequest.UpdateDto request, Errors errors,
+                                    @RequestPart("images") List<MultipartFile> images){
+        postService.update(postId, request, images, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                    @PathVariable(name = "postId")  Long postId){
+                                    @PathVariable(name = "postId") Long postId){
         postService.delete(postId, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }

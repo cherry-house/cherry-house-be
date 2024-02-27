@@ -1,8 +1,9 @@
-package com.cherryhouse.server.tag;
+package com.cherryhouse.server.post.tag;
 
 import com.cherryhouse.server.post.Post;
-import com.cherryhouse.server.posttag.PostTag;
-import com.cherryhouse.server.posttag.PostTagRepository;
+import com.cherryhouse.server.post.posttag.PostTag;
+import com.cherryhouse.server.post.posttag.PostTagMapping;
+import com.cherryhouse.server.post.posttag.PostTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +21,6 @@ public class TagService {
     @Transactional
     public void create(Post post, List<String> tags){
         tags.forEach(tagName -> save(post, tagName));
-    }
-
-    public List<String> getTags(Long postId){
-        return postTagRepository.findByPostId(postId)
-                .stream()
-                .map(postTag -> postTag.getTag().getName())
-                .toList();
     }
 
     @Transactional
@@ -65,5 +59,21 @@ public class TagService {
                 .tag(tag)
                 .build();
         postTagRepository.save(postTag);
+    }
+
+    //post id, tags 반환 : getPosts, getHearts
+    public List<PostTagMapping.TagsDto> getTagsDtoList(List<Post> postList){
+        return postList.stream()
+                .map(this::getTagsDto)
+                .toList();
+    }
+
+    //tags 반환 : getPost
+    public PostTagMapping.TagsDto getTagsDto(Post post) {
+        List<String> tags = postTagRepository.findByPostId(post.getId())
+                .stream()
+                .map(postTag -> postTag.getTag().getName())
+                .toList();
+        return new PostTagMapping.TagsDto(post.getId(), tags);
     }
 }

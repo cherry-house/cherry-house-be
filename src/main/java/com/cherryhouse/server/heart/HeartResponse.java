@@ -2,29 +2,35 @@ package com.cherryhouse.server.heart;
 
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.Post;
-import com.cherryhouse.server.posttag.PostTagMapping;
+import com.cherryhouse.server.post.image.ImageMapping;
+import com.cherryhouse.server.post.posttag.PostTagMapping;
 
 import java.util.List;
-
-import static com.cherryhouse.server.posttag.PostTagMapping.getTagsByPostId;
 
 public class HeartResponse {
 
     public record HeartDto(
-            PageData pageData,
+            PageData page,
             List<PostDto> postList
     ){
-        public static HeartDto of(PageData pageData,
-                                  List<Post> postList,
-                                  List<PostTagMapping> postTagMappingList
+        public static HeartDto of(
+                PageData pageData,
+                List<Post> postList,
+                List<PostTagMapping.TagsDto> tagsDtoList,
+                List<ImageMapping.UrlDto> urlDtoList
         ){
             return new HeartDto(
                     pageData,
                     postList.stream()
-                            .map(post -> new HeartResponse.HeartDto.PostDto(post, getTagsByPostId(postTagMappingList, post.getId())))
+                            .map(post -> new HeartResponse.HeartDto.PostDto(
+                                    post,
+                                    PostTagMapping.getTagsByPostId(tagsDtoList, post.getId()),
+                                    ImageMapping.getUrlByPostId(urlDtoList, post.getId())
+                            ))
                             .toList()
             );
         }
+
         public record PostDto (
                 Long id,
                 String title,
@@ -32,9 +38,10 @@ public class HeartResponse {
                 String address,
                 Integer distance,
                 List<String> tags,
-                List<String> photos
+                String image
         ){
-            public PostDto(Post post, List<String> tags) { //TODO: 위치, 사진 로직 추가
+            //TODO: 위치 로직 추가
+            public PostDto(Post post, List<String> tags, String image) {
                 this(
                         post.getId(),
                         post.getTitle(),
@@ -42,7 +49,7 @@ public class HeartResponse {
                         null,
                         null,
                         tags,
-                        null
+                        image
                 );
             }
         }

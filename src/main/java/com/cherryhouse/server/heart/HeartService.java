@@ -3,8 +3,10 @@ package com.cherryhouse.server.heart;
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.Post;
 import com.cherryhouse.server.post.PostService;
-import com.cherryhouse.server.posttag.PostTagMapping;
-import com.cherryhouse.server.tag.TagService;
+import com.cherryhouse.server.post.image.ImageMapping;
+import com.cherryhouse.server.post.image.ImageService;
+import com.cherryhouse.server.post.posttag.PostTagMapping;
+import com.cherryhouse.server.post.tag.TagService;
 import com.cherryhouse.server.user.User;
 import com.cherryhouse.server.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class HeartService {
     private final UserService userService;
     private final PostService postService;
     private final TagService tagService;
+    private final ImageService imageService;
     private final HeartRepository heartRepository;
 
     @Transactional
@@ -42,35 +45,23 @@ public class HeartService {
                     .build();
 
             heartRepository.save(heart);
-
             return true;
         }
     }
 
-    public boolean heartExists(User user, Long postId){
+    private boolean heartExists(User user, Long postId){
         return heartRepository.existsByUserAndPost(user.getEmail(), postId);
     }
 
     public HeartResponse.HeartDto getHearts(String email, Pageable pageable) {
         userService.findByEmail(email);
+
         Page<Post> postList = heartRepository.findPostByUserEmail(email, pageable);
 
         PageData pageData = PageData.getPageData(postList);
-        List<PostTagMapping> postTagMappings = postList.stream()
-                .map(post -> new PostTagMapping(post.getId(), tagService.getTags(post.getId())))
-                .toList();
-        return HeartResponse.HeartDto.of(pageData, postList.getContent(), postTagMappings);
+        List<PostTagMapping.TagsDto> tagsDtoList = tagService.getTagsDtoList(postList.getContent());
+        List<ImageMapping.UrlDto> urlDtoList = imageService.getUrlDtoList(postList.getContent());
+
+        return HeartResponse.HeartDto.of(pageData, postList.getContent(), tagsDtoList, urlDtoList);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

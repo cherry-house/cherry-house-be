@@ -2,28 +2,32 @@ package com.cherryhouse.server.post.dto;
 
 import com.cherryhouse.server._core.util.PageData;
 import com.cherryhouse.server.post.Post;
-import com.cherryhouse.server.posttag.PostTagMapping;
+import com.cherryhouse.server.post.image.ImageMapping;
+import com.cherryhouse.server.post.posttag.PostTagMapping;
 import com.cherryhouse.server.user.User;
 
 import java.util.List;
 
-import static com.cherryhouse.server.posttag.PostTagMapping.getTagsByPostId;
-
 public class PostResponse {
 
     public record PostsDto(
-            PageData pageData,
+            PageData page,
             List<PostDto> postList
     ) {
         public static PostsDto of(
                 PageData pageData,
                 List<Post> postList,
-                List<PostTagMapping> postTagMappingList
+                List<PostTagMapping.TagsDto> tagsDtoList,
+                List<ImageMapping.UrlDto> urlDtoList
         ){
             return new PostsDto(
                     pageData,
                     postList.stream()
-                            .map(post -> new PostDto(post, getTagsByPostId(postTagMappingList, post.getId())))
+                            .map(post -> new PostDto(
+                                    post,
+                                    PostTagMapping.getTagsByPostId(tagsDtoList, post.getId()),
+                                    ImageMapping.getUrlByPostId(urlDtoList, post.getId())
+                            ))
                             .toList()
             );
         }
@@ -35,10 +39,10 @@ public class PostResponse {
                 String address,
                 Integer distance,
                 List<String> tags,
-                String content,
-                List<String> photos
+                String image
         ){
-            public PostDto(Post post, List<String> tags) { //TODO: 위치, 사진 로직 추가
+            //TODO: 위치 로직 추가
+            public PostDto(Post post, List<String> tags, String image) {
                 this(
                         post.getId(),
                         post.getTitle(),
@@ -46,8 +50,7 @@ public class PostResponse {
                         null,
                         null,
                         tags,
-                        post.getContent(),
-                        null
+                        image
                 );
             }
         }
@@ -62,9 +65,10 @@ public class PostResponse {
             Integer distance,
             List<String> tags,
             String content,
-            List<String> photos
+            List<ImageMapping.ImageDto> images
     ){
-        public PostDto(Post post, List<String> tags, User user) { //TODO: 위치, 사진 로직 추가
+        //TODO: 위치 로직 추가
+        public PostDto(Post post, List<String> tags, List<ImageMapping.ImageDto> images, User user) {
             this(
                     post.getId(),
                     post.getTitle(),
@@ -74,7 +78,7 @@ public class PostResponse {
                     null,
                     tags,
                     post.getContent(),
-                    null
+                    images
             );
         }
 

@@ -1,4 +1,4 @@
-package com.cherryhouse.server.style;
+package com.cherryhouse.server.user.style;
 
 import com.cherryhouse.server.user.User;
 import jakarta.persistence.*;
@@ -17,14 +17,18 @@ public class Style{
     private Long id;
 
     @Column(nullable = false)
-    private String imgUrl;
+    private String saveImgUrl;
+
+    @Column(nullable = false)
+    private String accessImgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @Builder
-    public Style(String imgUrl, User user){
-        this.imgUrl = imgUrl;
+    public Style(String saveImgUrl, String accessImgUrl, User user){
+        this.saveImgUrl = saveImgUrl;
+        this.accessImgUrl = accessImgUrl;
         this.user = user;
     }
 }
