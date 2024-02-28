@@ -26,8 +26,11 @@ public class UserRequest {
             @Email
             String email,
 
-            @NotBlank(message = "비밀번호는 필수 입력입니다.")
+            @NotBlank
+            String currentPassword,
+
+            @NotBlank(message = "비밀번호는 필수 입력입니다")
             @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "비밀번호는 영문자와 숫자를 포함하여 8글자 이상이여야 합니다.")
-            String password
+            String newPassword
     ){}
 }
