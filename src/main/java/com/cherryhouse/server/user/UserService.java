@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,7 @@ public class UserService {
     private final PostRepository postRepository;
     private final TagService tagService;
     private final ImageService imageService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     //user 관련------------------------------------------------------
 
@@ -81,14 +83,18 @@ public class UserService {
 
     @Transactional
     public void updatePwd(String email, UserRequest.UpdatePwdDto updatePwdDto){
-        if(!Objects.equals(email, updatePwdDto.email())){
-            throw new ApiException(ExceptionCode.BAD_USER_REQUEST);
+        //유저 확인 & 비밀번호 검증
+        User user = validatePassword(email, updatePwdDto.currentPassword());
+        //로그인 상태 확인
+        if (redisTemplate.opsForValue().get(email + ":refresh_token") == null){
+            throw new ApiException(ExceptionCode.USER_LOGOUT);
         }
+        user.updatePassword(passwordEncoder.encode(updatePwdDto.newPassword()));
+
     }
 
     @Transactional
     public void updateImg(String email, MultipartFile file){
-        log.info("file: {}",file);
         User user = findByEmail(email);
         if(user.getProfileImage() != null){
             s3Service.delete(user.getProfileImage());
@@ -148,5 +154,14 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(
                 ()-> new ApiException(ExceptionCode.USER_NOT_FOUND)
         );
+    }
+
+    private User validatePassword(String email, String password){
+        User user = findByEmail(email);
+        if( !passwordEncoder.matches(password, user.getPassword()) ){
+            throw new ApiException(ExceptionCode.BAD_USER_PASSWORD);
+        }
+        return user;
+
     }
 }
