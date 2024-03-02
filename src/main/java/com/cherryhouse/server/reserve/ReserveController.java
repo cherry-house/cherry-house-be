@@ -4,6 +4,7 @@ import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,12 @@ public class ReserveController {
                                      @Valid @RequestBody ReserveRequest.changeReserveDto changeReserveDto){
         reserveService.update(user,changeReserveDto);
         return ResponseEntity.ok().body(ApiResponse.success());
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getReservation(@AuthenticationPrincipal UserPrincipal user, Pageable pageable){
+        ReserveResponse.ReserveDto response = reserveService.get(user.getEmail(),pageable);
+        return ResponseEntity.ok().body(ApiResponse.success(response));
     }
 
 
