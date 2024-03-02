@@ -1,6 +1,7 @@
 package com.cherryhouse.server.reserve;
 
 
+import com.cherryhouse.server.post.Post;
 import com.cherryhouse.server.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -19,8 +20,8 @@ public class Reserve {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long postId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User provider;
@@ -41,8 +42,8 @@ public class Reserve {
 
 
     @Builder
-    public Reserve(Long postId, User provider, User receiver, Status status, LocalDate createDate, LocalDate reservationDate){
-        this.postId = postId;
+    public Reserve(Post post, User provider, User receiver, Status status, LocalDate createDate, LocalDate reservationDate){
+        this.post = post;
         this.provider = provider;
         this.receiver = receiver;
         this.status = status;
