@@ -42,7 +42,7 @@ public class ReserveService {
     private final ImageService imageService;
 
     @Transactional
-    public void reserve(UserPrincipal user, ReserveRequest.makeReserveDto makeReserveDto) {
+    public void reserve(UserPrincipal user, ReserveRequest.MakeReserveDto makeReserveDto) {
 
         Post post = postService.getPostById(makeReserveDto.postId());
 
@@ -74,7 +74,7 @@ public class ReserveService {
     }
 
     @Transactional
-    public void update(UserPrincipal user, ReserveRequest.changeReserveDto changeReserveDto) {
+    public void update(UserPrincipal user, ReserveRequest.ChangeReserveDto changeReserveDto) {
         User provider = userService.findByEmail(user.getEmail());
         Post post = postService.getPostById(changeReserveDto.postId());
 

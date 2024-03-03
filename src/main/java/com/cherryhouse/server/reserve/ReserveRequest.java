@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public class ReserveRequest {
 
-    public record makeReserveDto(
+    public record MakeReserveDto(
 
             @NotBlank
             String receiver,
@@ -20,7 +20,7 @@ public class ReserveRequest {
 
     ){}
 
-    public record changeReserveDto (
+    public record ChangeReserveDto(
 
             @NotBlank
             String receiver,

@@ -18,14 +18,14 @@ public class ReserveController {
 
     @PostMapping
     public ResponseEntity<?> reserve(@AuthenticationPrincipal UserPrincipal user,
-                                     @Valid @RequestBody ReserveRequest.makeReserveDto makeReserveDto){
+                                     @Valid @RequestBody ReserveRequest.MakeReserveDto makeReserveDto){
         reserveService.reserve(user,makeReserveDto);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @PutMapping
     public ResponseEntity<?> updateReserve(@AuthenticationPrincipal UserPrincipal user,
-                                     @Valid @RequestBody ReserveRequest.changeReserveDto changeReserveDto){
+                                     @Valid @RequestBody ReserveRequest.ChangeReserveDto changeReserveDto){
         reserveService.update(user,changeReserveDto);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
