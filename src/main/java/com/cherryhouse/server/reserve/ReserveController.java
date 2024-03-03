@@ -23,7 +23,7 @@ public class ReserveController {
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
-    @PutMapping("/change")
+    @PutMapping
     public ResponseEntity<?> updateReserve(@AuthenticationPrincipal UserPrincipal user,
                                      @Valid @RequestBody ReserveRequest.changeReserveDto changeReserveDto){
         reserveService.update(user,changeReserveDto);
