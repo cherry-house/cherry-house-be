@@ -11,6 +11,7 @@ import com.cherryhouse.server.user.User;
 import com.cherryhouse.server.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -42,23 +43,31 @@ public class AuthService {
     @Transactional
     public TokenDto.Response login(AuthRequest.LoginDto loginDto){
 
-        // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
-        UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
+        try{
+            // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
+            UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
 
-        // 2. 실제 검증 ( 비밀번호 체크 )
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            // 2. 실제 검증 ( 비밀번호 체크 )
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenDto.Response tokenResponseDto = tokenProvider.createToken(authentication);
+            // 3. 인증 정보를 기반으로 JWT 토큰 생성
+            TokenDto.Response tokenResponseDto = tokenProvider.createToken(authentication);
 
-        redisTemplate.opsForValue().set(
-                authentication.getName() + ":refresh_token",
-                tokenResponseDto.getRefreshToken(),
-                REFRESH_TOKEN_EXPIRE_TIME,
-                TimeUnit.SECONDS
-        );
+            redisTemplate.opsForValue().set(
+                    authentication.getName() + ":refresh_token",
+                    tokenResponseDto.getRefreshToken(),
+                    REFRESH_TOKEN_EXPIRE_TIME,
+                    TimeUnit.SECONDS
+            );
 
-        return tokenResponseDto;
+            return tokenResponseDto;
+
+        }catch(BadCredentialsException e){
+            throw new ApiException(ExceptionCode.INVALID_AUTHORITY);
+        }
+
+
+
     }
 
     @Transactional
