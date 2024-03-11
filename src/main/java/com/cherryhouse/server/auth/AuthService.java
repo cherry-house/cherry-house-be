@@ -87,13 +87,14 @@ public class AuthService {
             throw new ApiException(ExceptionCode.FAIL_TO_LOGOUT);
         }
 
-//        Long expiration = tokenProvider.getExpiration(requestAccessToken);
-//        redisTemplate.opsForValue().set(
-//                requestAccessToken,
-//                "logout",
-//                expiration,
-//                TimeUnit.MILLISECONDS
-//        );
+        //블랙리스트 설정
+        Long accessTokenExpiration = tokenProvider.getExpiration(requestAccessToken);
+        redisTemplate.opsForValue().set(
+                requestAccessToken,
+                "logout",
+                accessTokenExpiration,
+                TimeUnit.MILLISECONDS
+        );
     }
 
     @Transactional
