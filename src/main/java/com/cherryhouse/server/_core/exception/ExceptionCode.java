@@ -13,8 +13,10 @@ public enum ExceptionCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 사용자를 찾을 수 없습니다."),
     USER_EXISTS(HttpStatus.BAD_REQUEST, "이미 회원가입된 이메일입니다."),
     BAD_USER_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 회원 요청입니다."),
+    INVALID_AUTHORITY(HttpStatus.UNAUTHORIZED, "비밀번호가 잘못되었습니다."),
     BAD_USER_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호를 잘 못 입력하였습니다."),
     USER_LOGOUT(HttpStatus.BAD_REQUEST, "로그아웃 된 유저입니다."),
+
     // auth --------------------
 
     INVALID_TOKEN_EXCEPTION(HttpStatus.NOT_FOUND,"유효하지 않은 토큰입니다."),
