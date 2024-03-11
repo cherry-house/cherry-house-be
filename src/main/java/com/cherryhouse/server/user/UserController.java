@@ -4,6 +4,7 @@ import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.util.ApiResponse;
 import com.cherryhouse.server.user.dto.UserRequest;
 import com.cherryhouse.server.user.dto.UserResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -29,21 +30,21 @@ public class UserController {
 
     @PutMapping("/info")
     public ResponseEntity<?> updateInfo(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                        @RequestBody UserRequest.UpdateInfoDto updateInfoDto, Errors errors){
+                                        @Valid @RequestBody UserRequest.UpdateInfoDto updateInfoDto, Errors errors){
         userService.updateInfo(userPrincipal.getEmail(), updateInfoDto);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @PutMapping("/profileImg")
     public ResponseEntity<?> updateImg(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                       @RequestParam("file") MultipartFile file){
+                                        @RequestParam("file") MultipartFile file){
         userService.updateImg(userPrincipal.getEmail(), file);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
 
     @PutMapping("/password")
     public ResponseEntity<?> updatePwd(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                       @RequestBody UserRequest.UpdatePwdDto updatePwdDto, Errors errors){
+                                       @Valid @RequestBody UserRequest.UpdatePwdDto updatePwdDto, Errors errors){
         userService.updatePwd(userPrincipal.getEmail(), updatePwdDto);
         return ResponseEntity.ok().body(ApiResponse.success());
     }
@@ -59,7 +60,7 @@ public class UserController {
 
     @DeleteMapping("/style")
     public ResponseEntity<?> deleteStyle(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                         @RequestParam("file") String filePath){
+                                          @RequestParam("file") String filePath){
         userService.deleteStyle(filePath, userPrincipal.getEmail());
         return ResponseEntity.ok().body(ApiResponse.success());
     }

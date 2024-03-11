@@ -82,18 +82,18 @@ public class AuthService {
 
         //redis에 해당 user email로 저장된 refresh token 있는지 확인, 있을 경우 삭제
         if (redisTemplate.opsForValue().get(authentication.getName() + ":refresh_token") != null){
-            redisTemplate.delete(authentication.getName());
+            redisTemplate.delete(authentication.getName() + ":refresh_token");
         }else{
             throw new ApiException(ExceptionCode.FAIL_TO_LOGOUT);
         }
 
-        Long expiration = tokenProvider.getExpiration(requestAccessToken);
-        redisTemplate.opsForValue().set(
-                requestAccessToken,
-                "logout",
-                expiration,
-                TimeUnit.MILLISECONDS
-        );
+//        Long expiration = tokenProvider.getExpiration(requestAccessToken);
+//        redisTemplate.opsForValue().set(
+//                requestAccessToken,
+//                "logout",
+//                expiration,
+//                TimeUnit.MILLISECONDS
+//        );
     }
 
     @Transactional
