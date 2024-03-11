@@ -83,39 +83,10 @@ public class SecurityConfig {
         );
 
         http.addFilterBefore(new JWTAuthenticationFilter(tokenProvider,redisTemplate), UsernamePasswordAuthenticationFilter.class);
-
+//        http.exceptionHandling(handler -> handler.authenticationEntryPoint(entryPoint));
         return http.build();
 
-        //-------------------for version 6.0.2
-//        httpSecurity.csrf().disable()
-//
-//                .exceptionHandling()
-//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-//                .accessDeniedHandler(jwtAccessDeniedHandler)
-//
-//                // enable h2-console
-//                .and()
-//                .headers()
-//                .frameOptions()
-//                .sameOrigin()
-//
-//                // 세션을 사용하지 않기 때문에 STATELESS로 설정
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//
-//                .and()
-//                .authorizeHttpRequests() // HttpServletRequest를 사용하는 요청들에 대한 접근제한을 설정하겠다.
-//                .requestMatchers("/auth/**").permitAll() // 로그인 api
-//                .requestMatchers("/posts/**").permitAll() // 회원가입 api
-//                .requestMatchers(PathRequest.toH2Console()).permitAll()// h2-console, favicon.ico 요청 인증 무시
-//                .requestMatchers("/favicon.ico").permitAll()
-//                .anyRequest().authenticated() // 그 외 인증 없이 접근X
-//
-//                .and()
-//                .addFilterBefore(new JWTAuthenticationFilter(tokenProvider),UsernamePasswordAuthenticationFilter.class); // JwtFilter를 addFilterBefore로 등록했던 JwtSecurityConfig class 적용
-//
-//        return httpSecurity.build();
+
     }
 
     //@Bean - 해당 메서드의 리턴되는 오브젝트트를 IoC로 등록해준다
