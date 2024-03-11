@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,32 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
+
+//@Override
+//public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+//    log.info("111");
+//    try{
+//        log.info("222");
+//        String token = resolveToken(request);
+//            String isLogout = redisTemplate.opsForValue().get(token);
+//            if (ObjectUtils.isEmpty(isLogout)){
+//                Authentication authentication = tokenProvider.getAuthentication(token);
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
+//                log.debug("Authentication 정보 : {}", authentication);
+//            }
+//    } catch (BadCredentialsException e) {
+//        // 비밀번호가 잘못 입력되었을 때 처리할 로직
+//        log.info("비밀번호가 잘못 입력되었습니다.");
+//        request.setAttribute("exception", e);
+//    }catch (Exception e){
+//        log.info("444");
+//        log.info("여기1.. :{}",e.getMessage());
+//        request.setAttribute("exception",e);
+//    }
+//    log.info("555");
+//    //log.info("666 : {}", request.getAttribute("exception"));
+//    chain.doFilter(request, response);
+//}
 
     //request header에서 토큰 정보를 추출함
     private String resolveToken(HttpServletRequest request){
