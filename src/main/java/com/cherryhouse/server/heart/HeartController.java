@@ -2,12 +2,14 @@ package com.cherryhouse.server.heart;
 
 import com.cherryhouse.server._core.security.UserPrincipal;
 import com.cherryhouse.server._core.util.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "HEART", description = "좋아요(저장) API 입니다.")
 @RestController
 @RequestMapping("/hearts")
 @RequiredArgsConstructor

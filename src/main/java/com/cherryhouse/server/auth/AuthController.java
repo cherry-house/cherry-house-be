@@ -3,6 +3,7 @@ package com.cherryhouse.server.auth;
 import com.cherryhouse.server._core.security.dto.TokenDto;
 import com.cherryhouse.server._core.util.ApiResponse;
 import com.cherryhouse.server.auth.dto.AuthRequest;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.cherryhouse.server._core.security.TokenProvider.REFRESH_TOKEN_EXPIRE_TIME;
 
+@Tag(name = "AUTH", description = "인증 API 입니다.")
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
