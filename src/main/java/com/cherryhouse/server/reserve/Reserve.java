@@ -39,8 +39,6 @@ public class Reserve {
     @Column
     private LocalDate createDate;
 
-
-
     @Builder
     public Reserve(Post post, User provider, User receiver, Status status, LocalDate createDate, LocalDate reservationDate){
         this.post = post;
@@ -49,12 +47,10 @@ public class Reserve {
         this.status = status;
         this.createDate = createDate;
         this.reservationDate = reservationDate;
-
     }
 
     public void update(LocalDate reservationDate, Status status) {
         this.reservationDate = reservationDate;
         this.status = status;
-
     }
 }
