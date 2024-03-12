@@ -1,10 +1,7 @@
 package com.cherryhouse.server._core.config;
 
 
-import com.cherryhouse.server._core.security.JWTAccessDeniedHandler;
-import com.cherryhouse.server._core.security.JWTAuthenticationEntryPoint;
-import com.cherryhouse.server._core.security.JWTAuthenticationFilter;
-import com.cherryhouse.server._core.security.TokenProvider;
+import com.cherryhouse.server._core.security.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,62 +28,46 @@ public class SecurityConfig {
     private final JWTAccessDeniedHandler jwtAccessDeniedHandler;
     private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final RedisTemplate<String,String> redisTemplate;
+    private final JWTExceptionFilter jwtExceptionFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-       http
+        http
                //토큰 사용 방식 -> csrf disable
-               .csrf(AbstractHttpConfigurer::disable);
-       http.csrf(
-               csrfCustomizer -> csrfCustomizer
-                       .ignoringRequestMatchers(antMatcher("/h2-console/**"))
-                       .disable()
-       );
-
-       http.headers(
-               // h2-console에서 iframe을 사용함. X-Frame-Options을 위해 sameOrigin 설정
-               headersCustomizer -> headersCustomizer
-                       .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-       );
-
-       //권한 설정
-       http.authorizeHttpRequests(
-               authorizeRequests -> authorizeRequests
-                       .requestMatchers("/auth/**").permitAll()
-                       .requestMatchers("/posts/**").permitAll()
-                       .requestMatchers("/hearts/**").permitAll()
-                       .requestMatchers("/users/**").permitAll()
-                       .anyRequest().permitAll()
-       );
-
-//       http.exceptionHandling(
-//               exceptionHandling -> exceptionHandling
-//                       .accessDeniedHandler(jwtAccessDeniedHandler)
-//                       .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-//       );
-
-        http.exceptionHandling(
-                exceptionHandler -> exceptionHandler.accessDeniedHandler(
-                        jwtAccessDeniedHandler::handle
+            .csrf(AbstractHttpConfigurer::disable)
+                .csrf(
+                        csrfCustomizer -> csrfCustomizer
+                                .ignoringRequestMatchers(antMatcher("/h2-console/**"))
+                                .disable()
                 )
-        );
-
-        http.exceptionHandling(
-                exceptionHandler -> exceptionHandler.authenticationEntryPoint(
-                        jwtAuthenticationEntryPoint::commence
+                .headers(
+                        headersCustomizer -> headersCustomizer
+                                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
-        );
+                .authorizeHttpRequests(
+                        authorizeRequests -> authorizeRequests
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/posts/**").permitAll()
+                                .requestMatchers("/hearts/**").permitAll()
+                                .requestMatchers("/users/**").permitAll()
+                                .anyRequest().permitAll()
+                )
+                .exceptionHandling(
+                        exceptionHandler -> exceptionHandler
+                                .accessDeniedHandler(jwtAccessDeniedHandler::handle)
+                )
+                .exceptionHandling(
+                        exceptionHandler -> exceptionHandler
+                                .authenticationEntryPoint(jwtAuthenticationEntryPoint::commence)
+                )
+                .sessionManagement(
+                        sessionCustomizer -> sessionCustomizer
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .addFilterBefore(new JWTAuthenticationFilter(tokenProvider,redisTemplate), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JWTAuthenticationFilter.class);
 
-        http.sessionManagement(
-                sessionCustomizer -> sessionCustomizer
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        );
-
-        http.addFilterBefore(new JWTAuthenticationFilter(tokenProvider,redisTemplate), UsernamePasswordAuthenticationFilter.class);
-//        http.exceptionHandling(handler -> handler.authenticationEntryPoint(entryPoint));
         return http.build();
-
-
     }
 
     //@Bean - 해당 메서드의 리턴되는 오브젝트트를 IoC로 등록해준다
