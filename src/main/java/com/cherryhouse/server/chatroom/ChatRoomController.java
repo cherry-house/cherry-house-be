@@ -5,6 +5,7 @@ import com.cherryhouse.server._core.util.ApiResponse;
 import com.cherryhouse.server.chatroom.dto.ChatRequest;
 import com.cherryhouse.server.chatroom.dto.ChatResponse;
 import com.cherryhouse.server.chatroom.dto.ChatRoomResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "CHATROOM", description = "채팅 API 입니다.")
 @RestController
 @RequestMapping("/chatrooms")
 @RequiredArgsConstructor
