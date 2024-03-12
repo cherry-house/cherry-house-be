@@ -35,8 +35,6 @@ public class ReserveService {
 
     private final PostService postService;
     private final UserService userService;
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final ReserveRepository reserveRepository;
     private final TagService tagService;
     private final ImageService imageService;
@@ -70,7 +68,6 @@ public class ReserveService {
         }
 
         reserveRepository.save(reserve);
-
     }
 
     @Transactional
@@ -85,8 +82,7 @@ public class ReserveService {
         Reserve reserve = reserveRepository.findByPostIdAndProviderAndReceiver(changeReserveDto.postId(), provider, receiver)
                 .orElseThrow( () -> new ApiException(ExceptionCode.RESERVE_NOT_FOUND));
 
-        reserve.update(changeReserveDto.reservationDate(),changeReserveDto.status());
-
+        reserve.update(changeReserveDto.reservationDate(), changeReserveDto.status());
     }
 
     public ReserveResponse.ReserveDto get(String email, Pageable pageable) {
@@ -97,11 +93,9 @@ public class ReserveService {
 
         PageData pageData = PageData.getPageData(reserveList);
 
-
         List<PostTagMapping.TagsDto> tagsDtoList = tagService.getTagsDtoList(postList);
         List<ImageMapping.UrlDto> urlDtoList = imageService.getUrlDtoList(postList);
 
-        return ReserveResponse.ReserveDto.of(pageData,reserveList.getContent(),tagsDtoList,urlDtoList);
-
+        return ReserveResponse.ReserveDto.of(pageData, reserveList.getContent(), tagsDtoList,urlDtoList);
     }
 }
