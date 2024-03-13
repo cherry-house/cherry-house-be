@@ -29,13 +29,13 @@ public class ApiResponse {
     @AllArgsConstructor
     public static class ResponseDto<T>{
 
-        @Schema(description = "상태 코드", nullable = false, example = "200")
+        @Schema(description = "상태 코드", example = "200")
         private int status;
 
-        @Schema(description = "데이터", nullable = false)
+        @Schema(description = "데이터")
         private T response;
 
-        @Schema(description = "에러 메시지", nullable = false, example = "null")
+        @Schema(description = "에러 메시지", example = "null")
         private String errorMessage;
     }
 }
