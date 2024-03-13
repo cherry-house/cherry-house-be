@@ -1,5 +1,11 @@
 package com.cherryhouse.server._core.security;
 
+import com.cherryhouse.server._core.exception.ApiException;
+import com.cherryhouse.server._core.exception.ExceptionCode;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.security.SignatureException;
 
 @Slf4j
 @Component
@@ -25,18 +32,25 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
     private final RedisTemplate<String,String> redisTemplate;
 
+
+
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+        log.info("*** Verifying token... ***");
+
         String token = resolveToken(request);
         if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+            // 블랙리스트 확인
             String isLogout = redisTemplate.opsForValue().get(token);
             if (ObjectUtils.isEmpty(isLogout)){
+                log.info("*** 블랙리스트에 없음 ***");
                 Authentication authentication = tokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.debug("Authentication 정보 : {}", authentication);
+            } else {
+                log.info("*** 블랙리스트에 있음 ***");
+                throw new RuntimeException("블랙리스트 유저");
             }
-        } else {
-            log.debug("유효한 JWT 토큰이 없습니다.");
         }
         chain.doFilter(request, response);
     }
