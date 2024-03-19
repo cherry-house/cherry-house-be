@@ -26,6 +26,9 @@
     - 체험단을 구하는 입장이라면, 나의 실력을 '스타일 보여주기' 기능을 통해서 맘껏 뽐낼 수 있어요 
     - 내가 올린 글과 하트를 누른 글들도 볼 수 있어요
 
+## 시스템 구성도
+![체리집 구성도2](https://github.com/cherry-house/cherry-house-be/assets/96944649/e6e152be-a5f6-4295-ad2f-525d1cc57aa3)
+
 
 ## 📑ERD
 ![image](https://github.com/cherry-house/cherry-house-be/assets/78164014/2f74a412-647c-45ca-b20c-69f6a4d320a1)
@@ -40,12 +43,14 @@
 
   [🍒 NOTION](https://cherry-house.notion.site/b9f54c05f7ef4ca784ceb089cd3913e1?pvs=4)
 
+## 💻개발 환경
 
-## 💻기술 스택
- <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> 
- <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
- <img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">
-  <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> 
-  <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
-  <img src="https://img.shields.io/badge/Amazon S3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white">
-  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white">
+### Development
+![java 17](https://img.shields.io/badge/-Java%2017-ED8B00?style=for-the-badge&logo=java&logoColor=white&s=22) ![spring boot 3.2.1](https://img.shields.io/badge/Spring%20boot%203.2.1-6DB33F?style=for-the-badge&logo=springboot&logoColor=white) ![AWS SES](https://img.shields.io/badge/-AWS%20SES-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+
+### Database
+![mysql 8.0](https://img.shields.io/badge/MySQL%208.0-005C84?style=for-the-badge&logo=mysql&logoColor=white) ![MongoDB](https://img.shields.io/badge/-MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white) ![Redis 6.2](https://img.shields.io/badge/Redis%206.2-DC382D?style=for-the-badge&logo=Redis&logoColor=white)
+ ![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=for-the-badge&logo=amazons3&logoColor=white)
+
+### Collaboration
+<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white">
