@@ -12,12 +12,12 @@ public class ReserveRequest {
 
             @NotBlank
             String receiver,
+
             @NotNull
             Long postId,
 
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
             LocalDate reservationDate
-
     ){}
 
     public record ChangeReserveDto(

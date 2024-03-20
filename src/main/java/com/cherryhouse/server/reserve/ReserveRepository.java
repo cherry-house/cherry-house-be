@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface ReserveRepository extends JpaRepository<Reserve, Long> {
 
-
     Optional<Reserve> findByPostIdAndReceiver(Long id, User receiver);
 
     Optional<Reserve> findByPostIdAndProviderAndReceiver(Long id, User provider, User receiver);
